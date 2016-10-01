@@ -1,0 +1,2096 @@
+<!--Saved by Quest 5.6.6113.25141-->
+<asl version="550">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Jewel Craft">
+    <inherit name="theme_typewriter" />
+    <gameid>ead97bff-e9f0-4ef0-8977-957b43e7855f</gameid>
+    <version>1.0</version>
+    <firstpublished>2016</firstpublished>
+    <menufont>Georgia, serif</menufont>
+    <multiplecommands type="boolean">false</multiplecommands>
+    <showhealth type="boolean">false</showhealth>
+    <subtitle>Ivy Veil and the Amulet of Power</subtitle>
+    <enablehyperlinks type="boolean">false</enablehyperlinks>
+    <feature_asktell />
+    <showpanes type="boolean">false</showpanes>
+    <showborder type="boolean">false</showborder>
+    <defaultbackground>White</defaultbackground>
+    <defaultwebfont type="string"></defaultwebfont>
+    <showlocation type="boolean">false</showlocation>
+    <setcustomwidth type="boolean">false</setcustomwidth>
+    <setcustompadding />
+    <custompaddingtop type="int">0</custompaddingtop>
+    <custompaddingleft type="int">0</custompaddingleft>
+    <custompaddingright type="int">0</custompaddingright>
+    <customwidth type="int">100</customwidth>
+    <showdescriptiononenter />
+    <attr name="autodescription_youcansee" type="int">3</attr>
+    <attr name="autodescription_youcango" type="int">4</attr>
+    <attr name="autodescription_description" type="int">2</attr>
+    <attr name="autodescription_youarein_useprefix" type="boolean">false</attr>
+    <autodescription_description_newline />
+    <author>Wesley Werner</author>
+    <category>Fantasy</category>
+    <cover>cover.png</cover>
+    <backgroundimage type="string"></backgroundimage>
+    <defaultfontsize type="int">14</defaultfontsize>
+    <pov type="object">Ivy Veil</pov>
+    <start type="script">
+      // Set number of turns an amulet ability lasts, and at which turn to warn the player before it expires completely.
+      amulet.turn_duration = 20
+      amulet.turn_warn = 5
+      // Initialize default values
+      amulet.level = 0
+      amulet.time = 0
+      amulet.worn = false
+      debugger.on = false
+      MoveObject (Ivy Veil, Prologue)
+    </start>
+  </game>
+  <object name="Prologue">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <alias>Our Story Begins</alias>
+    <descprefix type="string"></descprefix>
+    <enter type="script"><![CDATA[
+      msg ("It is the Rising Epoch of Spells. A time of great discovery and powerful magic. Burnspring the Sorcerous has trapped the heads of the realm in a magical web, taking control over the land. Unknown to you, your friend <b>Rain Arcana</b> is about to burst through your door.")
+      wait {
+        MoveObject (Ivy Veil, Home)
+      }
+    ]]></enter>
+    <object name="Ivy Veil">
+      <inherit name="editor_object" />
+      <inherit name="editor_player" />
+      <inherit name="namedfemale" />
+      <alias>Ivy Veil</alias>
+      <pov_alt type="stringlist">
+        <value>myself</value>
+        <value>self</value>
+        <value>yourself</value>
+      </pov_alt>
+      <attr name="pov_look">You are Ivy Veil, a jeweler who specializes in precious stones.</attr>
+      <speak>You had better get going, Ivy.</speak>
+    </object>
+  </object>
+  <object name="amulet">
+    <inherit name="editor_object" />
+    <feature_usegive />
+    <drop type="boolean">false</drop>
+    <look><![CDATA[The amulet is seamless, like crafted from magic. There are four slots to hold four stones.<br/><br/>You can <i>use amulet</i>]]></look>
+    <use type="script"><![CDATA[
+      if (not Got(amulet)) {
+        msg ("You don't have an amulet.")
+      }
+      else {
+        switch (amulet.level) {
+          case (0) {
+            picture ("amulet-lvl-0.png")
+            msg ("Your amulet has no stones.")
+          }
+          case (1) {
+            picture ("amulet-lvl-1.png")
+            msg ("Your amulet has an Amethyst for <b>Protection</b>.")
+          }
+          case (2) {
+            picture ("amulet-lvl-2.png")
+            msg ("Your amulet has an Amethyst for <b>Protection</b>, and an Emerald for <b>Insight</b>.")
+          }
+          case (3) {
+            picture ("amulet-lvl-3.png")
+            msg ("Your amulet has an Amethyst for <b>Protection</b>, an Emerald for <b>Insight</b>, and Obsidian for <b>Strength</b>.")
+          }
+          case (4) {
+            picture ("amulet-lvl-4.png")
+            msg ("Your amulet has an Amethyst for <b>Protection</b>, an Emerald for <b>Insight</b>, Obsidian for <b>Strength</b>, and Amber for <b>Healing</b>.")
+          }
+        }
+        if (amulet.level > 0) {
+          msg ("You can <i>Use amulet for ...</i> to activate it's power.")
+        }
+      }
+    ]]></use>
+    <wear type="script">
+      if (amulet.worn = true) {
+        msg ("You are already wearing the amulet around your neck.")
+      }
+      else {
+        if (amulet.level = 4) {
+          amulet.worn = true
+          amulet.time = 0
+          amulet.ability = ""
+          msg ("You place the amulet around your neck, and immediately feel it's power surge through you! All the stones glow with an iridescent brilliance.")
+        }
+        else {
+          msg ("You place the amulet around your neck, and don't feel anything special. You remove it and place it back in your pocket for safe keeping.")
+        }
+      }
+    </wear>
+  </object>
+  <command name="debug">
+    <pattern>debug #text_param1#</pattern>
+    <script>
+      switch (text_param1) {
+        case ("add") {
+          AddAmuletStone
+        }
+        case ("rem") {
+          RemoveAmuletStone
+        }
+        case ("on") {
+          debugger.on = true
+        }
+        case ("off") {
+          debugger.on = false
+        }
+        case ("ch2") {
+          MoveObject (Ivy Veil, Mystic Woods)
+          AddToInventory (amulet)
+          amulet.level = 1
+        }
+        case ("ch3") {
+          MoveObject (Ivy Veil, Catacombs)
+          AddToInventory (amulet)
+          amulet.level = 2
+        }
+        case ("ch4") {
+          MoveObject (Ivy Veil, Forest Path)
+          AddToInventory (amulet)
+          amulet.level = 3
+        }
+        case ("ch5") {
+          MoveObject (Ivy Veil, Epilogue)
+          AddToInventory (amulet)
+          amulet.level = 4
+        }
+        default {
+          msg ("Debug commands: on, off, add (stone), rem (stone)")
+        }
+      }
+    </script>
+  </command>
+  <command name="use amulet for">
+    <pattern>use amulet for #text_power#</pattern>
+    <script><![CDATA[
+      if (Got(amulet)) {
+        if (amulet.worn = true) {
+          msg ("Since you are wearing the amulet around your neck, you don't need to activate it anymore. You feel it's power surge through you, and all the stones glow with an iridescent brilliance.")
+        }
+        else {
+          switch (LCASE(text_power)) {
+            case ("protection") {
+              if (amulet.level >= 1) {
+                msg ("You feel protected from evil curses.")
+                UseAbility (text_power)
+              }
+              else {
+                msg ("Your amulet does not have the stone for that ability.")
+              }
+            }
+            case ("insight") {
+              if (amulet.level >= 2) {
+                msg ("Your intuition heightens.")
+                UseAbility (text_power)
+              }
+              else {
+                msg ("Your amulet does not have the stone for that ability.")
+              }
+            }
+            case ("strength") {
+              if (amulet.level >= 3) {
+                msg ("You feel strength coursing through your body.")
+                UseAbility (text_power)
+              }
+              else {
+                msg ("Your amulet does not have the stone for that ability.")
+              }
+            }
+            case ("healing") {
+              if (amulet.level >= 4) {
+                msg ("Your body heals.")
+                UseAbility (text_power)
+              }
+              else {
+                msg ("Your amulet does not have the stone for that ability.")
+              }
+            }
+            default {
+              msg ("The amulet does not respond.")
+            }
+          }
+        }
+      }
+    ]]></script>
+  </command>
+  <turnscript name="CallAmuletTurnStep">
+    <enabled />
+    <script>
+      AmuletTurnStep
+    </script>
+  </turnscript>
+  <object name="Home">
+    <inherit name="editor_room" />
+    <alias>Your Home</alias>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <beforefirstenter type="script"><![CDATA[
+      msg ("<h1>Chapter I</h1><br/><br/>Rain bursts through the door. \"Ivy! We need your help!\"<br/><br/>\"What is going on, Rain?\"<br/><br/>\"Burnspring the Sorcerous trapped the magician's guild, the city is powerless against him.\" he pants. <br/><br/>\"My help? I make jewelry, how in the name of Anerat can I help?\", you feel uneasy.<br/><br/>Rain steadies himself, \"Our magicians are trapped, to be sure, and I fear I will be taken soon. Here, have this...\"<br/><br/>Rain pushes something into your hands...")
+      wait {
+        AddToInventory (amulet)
+        picture ("amulet-lvl-0.png")
+        msg ("The amulet feels solid and reassuring in your palms. \"What is this?\"<br/><br/>Rain leans in, \"The Amulet of Power. It will help us defeat Burnspring, you need to find the four missing stones, and return in time to save us all, Ivy.\"<br/><br/>You feel dread, but reassured by the magical token. \"How do I find these stones?\" <br/><br/>\"Go find the Riddler on the Hill, the amulet will guide you from there.\", he sighs.")
+      }
+    ]]></beforefirstenter>
+    <firstenter type="script">
+    </firstenter>
+    <object name="hearth">
+      <inherit name="editor_object" />
+      <look>The dying embers are covered in ash.</look>
+    </object>
+    <object name="table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <look>An old sturdy wooden table where you work on your jewels. There are various tools and items on the table, none of them are needed right now.</look>
+      <attr name="feature_container" type="boolean">false</attr>
+      <contentsprefix>on it you see</contentsprefix>
+      <hidechildren />
+      <listchildren />
+    </object>
+    <object name="door">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <look>It leads outside.</look>
+      <feature_container />
+      <openscript type="script">
+        msg ("You open the door. Rain turns to you, \"Good luck, Ivy.\"")
+        MakeExitVisible (Home Exit)
+      </openscript>
+    </object>
+    <exit name="Home Exit" alias="out" to="Hill Path">
+      <inherit name="outdirection" />
+      <locked type="boolean">false</locked>
+      <visible type="boolean">false</visible>
+    </exit>
+    <object name="Rain Arcana">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <look><![CDATA[This man puts you in mind of a mysterious raven. He has hooded eyes the color of chestnuts. His fine, straight, black hair is worn in a style that reminds you of the aurora borealis. He has an angular build. His skin is dark. He has a high forehead. His wardrobe is strange, with a lot of green and violet.<br/>]]></look>
+      <feature_usegive />
+      <speak><![CDATA["Perhaps there is something you want to <i>Ask</i> me?"]]></speak>
+      <askdefault type="script">
+        msg ("\"I don't understand what you ask, Ivy.\"")
+      </askdefault>
+      <give type="scriptdictionary">
+        <item key="amulet">
+          firsttime {
+            msg ("\"I cannot take the amulet back, Ivy. When Burnspring finds me, and undoubtedly he will, all hope will be lost if he gets hold of the Agimat of Power.\"")
+          }
+          otherwise {
+            msg ("You decide Rain is right, we cannot risk losing the amulet in the hands of Burnspring.")
+          }
+        </item>
+      </give>
+      <ask type="scriptdictionary">
+        <item key="amulet agimat stone"><![CDATA[
+          msg ("\"Find the four missing stones and place them within the amulet. There are four stones, each with a unique power.\"<br/><br/>\"The Amethyst  stone gives protection, you will be able to resist evil curses and bad wishes.\"<br/><br/>\"The Emerald stone gives Insight and intuition. You will sense if something will happen, or know which path to walk.\"<br/><br/>\"The Obsidian stone gives strength, and makes your skin hard like steel.\"<br/><br/>\"The Amber stone gives healing, it allows you to recover from injury or poison.\"")
+        ]]></item>
+        <item key="burnspring">
+          msg ("\"Burnspring was a magician of the times, very unconventional and perhaps a little too dark for the rest of us. He set off to find a mystic and dark power. No doubt he did, and now is using it for great evil.\"")
+        </item>
+        <item key="us">
+          firsttime {
+            msg ("\"Ivy, I hope you return. You know how much last night meant...\"")
+          }
+          otherwise {
+            msg ("He looks too embarrassed to ask again.")
+          }
+        </item>
+      </ask>
+    </object>
+  </object>
+  <object name="Hill Path">
+    <inherit name="editor_room" />
+    <descprefix>You are on</descprefix>
+    <description>{once:There is shrubbery and trees around you. You can hear water flowing, but cannot see much through the dense foliage. }Town is due south, you have no need to go back there right now.</description>
+    <beforeenter type="script">
+      if (amulet.level = 1) {
+        MakeExitVisible (mystic forest exit)
+      }
+    </beforeenter>
+    <beforefirstenter type="script">
+      msg ("You gather yourself and set off on the hill path. After a half-day of walking the path narrows, the land fills with trees, shrubbery and small streams.")
+    </beforefirstenter>
+    <firstenter type="script">
+    </firstenter>
+    <enter type="script">
+      if (amulet.level = 1) {
+        msg ("You are drawn towards a new path East, you feel the amulet is leading you towards the next stone.")
+      }
+    </enter>
+    <exit alias="north" to="Hill Orchard">
+      <inherit name="northdirection" />
+      <suffix>to the Orchard</suffix>
+    </exit>
+    <object name="trees">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look>The foliage is very dense. You don't notice anything particular within the thick forest.</look>
+      <alt type="stringlist">
+        <value>shrubbery</value>
+        <value>foliage</value>
+        <value>shrubs</value>
+      </alt>
+    </object>
+    <exit name="mystic forest exit" alias="east" to="Mystic Woods">
+      <inherit name="eastdirection" />
+      <visible type="boolean">false</visible>
+      <suffix>on the new path</suffix>
+    </exit>
+  </object>
+  <object name="Hill Orchard">
+    <inherit name="editor_room" />
+    <alias>Orchard</alias>
+    <description>{once:The hill path is surrounded on both sides by an orchard, it seems a bit wild but somebody has been tending to it. You hear bees and birds going about the flowering buds.}</description>
+    <beforeenter type="script">
+      if (GetBoolean(claycup, "filled")) {
+      }
+      else {
+        appletree.color = Pick ("blue;orange;purple;pink;black;white")
+      }
+    </beforeenter>
+    <exit alias="south" to="Hill Path">
+      <inherit name="southdirection" />
+      <suffix>back to the path</suffix>
+    </exit>
+    <exit alias="north" to="Hill Pond">
+      <inherit name="northdirection" />
+      <suffix>to the pond</suffix>
+    </exit>
+    <object name="birds">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <alt type="stringlist">
+        <value>bees</value>
+      </alt>
+      <look>The birds are drawn to the fruits, the bees to the flowers. Their song bring a uncanny tune to this dark hill path.</look>
+      <scenery />
+    </object>
+    <object name="appletree">
+      <inherit name="editor_object" />
+      <alias>apple tree</alias>
+      <alt type="stringlist">
+        <value>tree</value>
+        <value>apples</value>
+        <value>fruits</value>
+      </alt>
+      <look type="script">
+        msg ("It looks like a normal apple tree, except the fruit are " + appletree.color)
+      </look>
+      <take type="script">
+        msg ("Better leave it, you are not sure who might be watching, or if those are even edible.")
+      </take>
+    </object>
+  </object>
+  <object name="Hill Pond">
+    <inherit name="editor_room" />
+    <description>There is a pond next to the path, a trail leads away into the underbrush.</description>
+    <alias>Pond</alias>
+    <beforeenter type="script">
+      frog.magicword = Pick ("ruby;peridot;beryl;moldavite")
+    </beforeenter>
+    <exit alias="south" to="Hill Orchard">
+      <inherit name="southdirection" />
+      <suffix>back to the Orchard</suffix>
+    </exit>
+    <exit name="trail" alias="northwest" to="Hill Top">
+      <inherit name="northwestdirection" />
+      <suffix type="string"></suffix>
+      <look>The trail veers off at an angle, deep into the shadowed brush.</look>
+      <prefix>follow the trail</prefix>
+    </exit>
+    <object name="frog">
+      <inherit name="editor_object" />
+      <look>The unusual frog sits on a stone in the middle of the pond, it has dragonfly-like wings. It seems unperturbed by your presence, and it almost looks like it wants to say something.</look>
+      <speak type="script">
+        msg ("The frog replies, '" + frog.magicword + "'")
+      </speak>
+      <askdefault type="script">
+        msg ("The frog replies, '" + frog.magicword + "'")
+      </askdefault>
+    </object>
+    <object name="pond">
+      <inherit name="editor_object" />
+      <scenery />
+      <look>The water sparkles with a magical quality. The pond is shadowed by trees and shrubs, which form a natural wall around the pond's edge. Rocks and stones offer little platforms for frogs and other flying insects.</look>
+      <feature_usegive />
+      <useon type="scriptdictionary">
+        <item key="claycup"><![CDATA[
+          msg ("Perhaps you mean to <i>fill cup</i>?")
+        ]]></item>
+      </useon>
+    </object>
+    <object name="fish">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <look>You see some fish swimming in the shallow waters. Light shimmers off them as they twist and turn.</look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>some</prefix>
+    </object>
+  </object>
+  <object name="Hill Top">
+    <inherit name="editor_room" />
+    <description>You are on top of the hill.</description>
+    <firstenter type="script">
+    </firstenter>
+    <beforeenter type="script">
+    </beforeenter>
+    <beforefirstenter type="script">
+      msg ("You move along the trail, bending low in some places to avoid the low hanging underbrush.")
+    </beforefirstenter>
+    <exit alias="southeast" to="Hill Pond">
+      <inherit name="southeastdirection" />
+    </exit>
+    <object name="Riddler">
+      <inherit name="editor_object" />
+      <inherit name="namedmale" />
+      <look><![CDATA[This man makes you think of a waiting vulture. He has deep-set green eyes that are like two clumps of moss. His silky, wavy, black hair is medium-length and is worn in a simple, dignified style. He's got stubble. He has a boyish build. His skin is dark. He has prominent cheekbones. His wardrobe is uncomplicated and dignified, with a lot of red and orange<br/><br/>The Riddler is juggling an Amethyst stone.]]></look>
+      <alias>Riddler</alias>
+      <prefix>the</prefix>
+      <feature_usegive />
+      <ask type="scriptdictionary">
+        <item key="stone amethyst"><![CDATA[
+          if (not Got(claycup)) {
+            msg ("The Riddler glares at you for a long moment, before his quiet, disturbing voice breaks in: \"What do you seek?\"<br/><br/>\"That stone in your palms\", you reply.<br/><br/>\"It is not yours to take, nor mine to give. But mayhaps the stone can decide, if you can answer me this...\"<br/><br/>You don't like the sound of that.<br/><br/>The Riddler says, \"No legs have I to dance, no lungs have I to breathe, no life have I to live or die and yet I do all three. What am I?\"<br/>")
+            get input {
+              if (Instr(LCASE(result), "fire") > 0) {
+                msg ("The Riddler fumbles, shifting eyes left and right, suddenly shouts, \"YES!\", giving you one mighty big fright!<br/>")
+              }
+              else {
+                msg ("\"Hahahaha\" he cackles. \"You are wrong, but there is hope for you yet. Since I value riddles more than any diamond or garnet.\"<br/> <br/>You feel annoyed, but determined.<br/>")
+              }
+              msg ("\"Before I give you this stone, you must do something prithee\", he smirks. \"Go fill this cup with pond-water, and bring it to me.\"")
+              MakeObjectVisible (claycup)
+            }
+          }
+          else {
+            msg ("\"You are supposed to give me a cup\"")
+          }
+        ]]></item>
+      </ask>
+      <give type="scriptdictionary">
+        <item key="claycup"><![CDATA[
+          if (GetBoolean(claycup, "filled")) {
+            goodanswers = true
+            msg ("\"Thank you my dear, now tell me... what does the dragon-frog say?\"<br/>")
+            get input {
+              if (LCASE(result) <> frog.magicword) {
+                goodanswers = false
+              }
+              else {
+              }
+              msg ("\"And what colour are the apples today?\"<br/>")
+              get input {
+                if (LCASE(result) <> appletree.color) {
+                  goodanswers = false
+                }
+                if (debugger.on) {
+                  goodanswers = true
+                }
+                if (goodanswers = true) {
+                  msg ("\"Well, well, well, perhaps you are worthy after all.\" The riddler takes the cup, sips the water, and fades away in a puff of smoke.<br/><br/>You are alone, a stone lies on the ground.")
+                  RemoveObject (claycup)
+                  RemoveObject (Riddler)
+                }
+                else {
+                  msg ("\"Sorry for you, that wasn't true!\" The Riddler smirks, pouring the water out of the cup. \"How about you go get some more water, and count again?\"")
+                  claycup.filled = false
+                }
+              }
+            }
+          }
+          else {
+            msg ("\"The cup is empty! I am still waiting for my cup of sparkling water.\"")
+          }
+        ]]></item>
+      </give>
+      <speak><![CDATA["Do you want to <i>ask</i> me about something?"]]></speak>
+    </object>
+    <object name="claycup">
+      <inherit name="editor_object" />
+      <take />
+      <alias>clay cup</alias>
+      <alt type="stringlist">
+        <value>cup</value>
+      </alt>
+      <look>{if not claycup.filled:The cup is empty}{if claycup.filled:It is full.}</look>
+      <visible type="boolean">false</visible>
+      <takemsg>You take the light brown cup made of pond clay. There are teeth marks around the lip of the cup.</takemsg>
+      <fill type="script">
+        if (game.pov.parent = Hill Pond) {
+          claycup.filled = true
+          msg ("You fill the clay cup with sparkling pond water.")
+        }
+      </fill>
+      <fillwithwater type="script">
+        if (game.pov.parent = Hill Pond) {
+          claycup.filled = true
+          msg ("You fill the clay cup with sparkling pond water.")
+        }
+      </fillwithwater>
+    </object>
+    <object name="Amethyst">
+      <inherit name="editor_object" />
+      <look>A brilliant purple shimmer surrounds the stone.</look>
+      <alt type="stringlist">
+        <value>stone</value>
+        <value>amethyst stone</value>
+      </alt>
+      <take type="script">
+        if (ListContains(ScopeVisible(), Riddler)) {
+          msg ("The Riddler refuses to give you the stone, until you solve his riddles.")
+        }
+        else {
+          AddAmuletStone
+          RemoveObject (Amethyst)
+        }
+      </take>
+    </object>
+  </object>
+  <turnscript name="CallDebugTurnStep">
+    <enabled />
+    <script>
+      DebugTurnStep
+    </script>
+  </turnscript>
+  <object name="debugger">
+    <inherit name="editor_object" />
+    <alias>debugger</alias>
+  </object>
+  <object name="Mystic Woods">
+    <inherit name="editor_room" />
+    <alias>Woods</alias>
+    <description>{once:You enter a small clearing, and see something you did not expect.}</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <beforefirstenter type="script"><![CDATA[
+      amulet.ability = ""
+      amulet.time = 0
+      msg ("<h1>Chapter II</h1><br/><br/>You travelled for two days on foot before reaching some woodlands. You are hungry and tired, and very hopeful the woods will provide more food and shelter than this dusty road ever can.")
+    ]]></beforefirstenter>
+    <beforeenter type="script">
+    </beforeenter>
+    <object name="House">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <alias>Old House</alias>
+      <look>It looks very old, yet the thick wooden walls seem sturdy. A stone chimney slowly announces a hearth inside.</look>
+      <feature_container />
+      <contentsprefix>you also see</contentsprefix>
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>you notice</listchildrenprefix>
+      <object name="windows">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix>the</prefix>
+        <look>They look frosted over, you cannot see inside the house. Only a dull glow.</look>
+      </object>
+      <object name="herb garden">
+        <inherit name="editor_object" />
+        <look>Various herbs grow next to the house. </look>
+        <alt type="stringlist">
+          <value>herbs</value>
+        </alt>
+      </object>
+      <object name="charms">
+        <inherit name="editor_object" />
+        <inherit name="plural" />
+        <look>They hang over the doorway and windows, from the look of them it seems they are apotropaic - warding magic to keep unwanted guests, out.</look>
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+      </object>
+      <object name="mystic house door">
+        <inherit name="editor_object" />
+        <inherit name="openable" />
+        <alias>door</alias>
+        <look>Knots in the wood give it the likeness of a face.</look>
+        <feature_container />
+        <scenery type="boolean">false</scenery>
+        <close type="boolean">false</close>
+        <openscript type="script"><![CDATA[
+          if (amulet.ability <> "protection") {
+            HelperCloseObject (mystic house door)
+            msg ("The door slams shut on it's own volition.")
+          }
+          else {
+            msg ("The door creaks open, you sigh with relief and thank the amulet for it's protection.")
+            UnlockExit (mystic house entrance)
+          }
+        ]]></openscript>
+      </object>
+    </object>
+    <exit name="mystic house entrance" alias="in" to="Mystic House">
+      <inherit name="indirection" />
+      <locked />
+      <visible />
+      <lockmessage>An unseen force pushes you back from the door</lockmessage>
+    </exit>
+  </object>
+  <object name="Mystic House">
+    <inherit name="editor_room" />
+    <description>{once:The little house is warm inside, it smells like a cacophony of herbs. There are potions and herbs on every shelf and hanging from every beam. Nobody seems to be home.}</description>
+    <beforefirstenter type="script">
+      book.torn = true
+      jars.searched = false
+      carpet.moved = false
+    </beforefirstenter>
+    <exit alias="out" to="Mystic Woods">
+      <inherit name="outdirection" />
+      <suffix type="string"></suffix>
+    </exit>
+    <object name="library">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <feature_container />
+      <hidechildren />
+      <contentsprefix>within it</contentsprefix>
+      <look>Someone keeps a small library in the book case. Some of the titles include: The Study of Black Magic, Defense Against of Essential Summoning, A Catalogue of Abjuration, and Practical Transfiguration.</look>
+      <listchildren />
+      <object name="book">
+        <inherit name="editor_object" />
+        <usedefaultprefix />
+        <prefix>some</prefix>
+        <look><![CDATA[A book titled "Basic Magical Art". {once:It is practically incomprehensible. Delightfully, the concepts and information do show a great deal of insight.}<br/>{if book.torn:One of the pages is torn in half, you can make out the word "Ajar".}<br/>{if not book.torn:You see a recipe for "Potion of Ajar".}]]></look>
+        <alias>book</alias>
+        <take />
+        <feature_usegive />
+        <alt type="stringlist">
+          <value>recipe</value>
+        </alt>
+        <read type="script"><![CDATA[
+          if (Got(book)) {
+            if (book.torn = true) {
+              msg ("You look at the torn page, and cannot make sense with only half the page.")
+            }
+            else {
+              msg ("<strong style='text-decoration: underline'>Potion of Ajar</strong>")
+              msg ("This potion will open any door, whether locked nailed or barred.")
+              msg ("Put Lavender, Eye of Newt and Forbidden tonic in a small cauldron.")
+              msg ("Recite the words, 'Phasmatos Siprum'")
+              msg ("Pour the potion over the door")
+            }
+          }
+          else {
+            msg ("You don't have the book")
+          }
+        ]]></read>
+        <useon type="scriptdictionary">
+          <item key="torn page">
+            if (Got(book)) {
+              book.torn = false
+              msg ("You place the page inside the book. The torn pages magically join and become whole. It reveals a potion recipe!")
+              RemoveObject (torn page)
+            }
+            else {
+              msg ("You don't have the book")
+            }
+          </item>
+        </useon>
+      </object>
+    </object>
+    <object name="mystic table">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <alias>table</alias>
+      <feature_container />
+      <hidechildren />
+      <listchildren />
+      <contentsprefix>on it</contentsprefix>
+      <look>A wooden table with some artifacts on top.</look>
+      <object name="jars">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <inherit name="plural" />
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <prefix type="string"></prefix>
+        <feature_container />
+        <isopen type="boolean">false</isopen>
+        <hidechildren />
+        <listchildren />
+        <look type="script">
+          msg ("Round clay jars filled with various herbs.")
+          if (jars.isopen and not jars.searched) {
+            msg ("You see someone tried hiding something in one of them.")
+          }
+        </look>
+        <object name="wormwood herb">
+          <inherit name="editor_object" />
+          <alias>Wormwood</alias>
+          <usedefaultprefix type="boolean">false</usedefaultprefix>
+          <feature_usegive />
+          <look>Dried spiky leaves of a darkish green hue.</look>
+          <take type="script"><![CDATA[
+            msg ("No need to take the herbs, just <i>Use herb on cauldron</i>.")
+          ]]></take>
+          <use type="script">
+            UseItemWithCauldron (this)
+          </use>
+        </object>
+        <object name="lavender herb">
+          <inherit name="editor_object" />
+          <alias>Lavender</alias>
+          <usedefaultprefix type="boolean">false</usedefaultprefix>
+          <feature_usegive />
+          <look>Dried lavender buds that smell wonderful.</look>
+          <use type="script">
+            UseItemWithCauldron (this)
+          </use>
+        </object>
+        <object name="dried frog herb">
+          <inherit name="editor_object" />
+          <alt type="stringlist">
+            <value>frog</value>
+          </alt>
+          <usedefaultprefix type="boolean">false</usedefaultprefix>
+          <alias>Dried Frog</alias>
+          <feature_usegive />
+          <look>A dry, flattened frog. It smells terrible!</look>
+          <use type="script">
+            UseItemWithCauldron (this)
+          </use>
+        </object>
+        <object name="eye of newt">
+          <inherit name="editor_object" />
+          <alias>Eye of Newt</alias>
+          <feature_usegive />
+          <look>A bulging eyeball stares into space.</look>
+          <use type="script">
+            UseItemWithCauldron (this)
+          </use>
+        </object>
+        <object name="dreamer tonic">
+          <inherit name="editor_object" />
+          <alias>Dreamer Tonic</alias>
+          <feature_usegive />
+          <look>A reflective, thin tonic that is ochre with white accretions on the side. It smells like peach, but tastes like cream.</look>
+          <use type="script">
+            UseItemWithCauldron (this)
+          </use>
+        </object>
+        <object name="thunder tonic">
+          <inherit name="editor_object" />
+          <feature_usegive />
+          <alias>Thunder Tonic</alias>
+          <look>A glowing, bubbling liquid that is silver with copper specks. It smells and tastes like lettuce.</look>
+          <use type="script">
+            UseItemWithCauldron (this)
+          </use>
+        </object>
+        <object name="forbidden tonic">
+          <inherit name="editor_object" />
+          <feature_usegive />
+          <alias>Forbidden Tonic</alias>
+          <look>A chunky substance that is red in color. It smells and tastes like wax and cinnamon.</look>
+          <use type="script">
+            UseItemWithCauldron (this)
+          </use>
+        </object>
+      </object>
+      <object name="cauldron">
+        <inherit name="editor_object" />
+        <inherit name="container_open" />
+        <usedefaultprefix />
+        <look><![CDATA[A small, black cast iron cauldron for brewing potions. You can <i>Use herb/tonic</i> to add or remove ingredients.]]></look>
+        <feature_container />
+        <open type="boolean">false</open>
+        <close type="boolean">false</close>
+        <attr name="feature_usegive" type="boolean">false</attr>
+        <alt type="stringlist">
+          <value>Siprum</value>
+        </alt>
+        <phasmatos type="script">
+          if (Got(potion of ajar)) {
+            msg ("No need to make that potion again.")
+          }
+          else {
+            cauldron_count = ListCount ( GetDirectChildren(cauldron) )
+            expected_count = 3
+            valid_count = 0
+            if (Contains (cauldron,forbidden tonic)) {
+              valid_count = valid_count + 1
+            }
+            if (Contains (cauldron,eye of newt)) {
+              valid_count = valid_count + 1
+            }
+            if (Contains (cauldron,lavender herb)) {
+              valid_count = valid_count + 1
+            }
+            if (valid_count = expected_count and cauldron_count = expected_count) {
+              MakeObjectVisible (potion of ajar)
+              AddToInventory (potion of ajar)
+              HelperCloseObject (jars)
+              msg ("The incantation makes the cauldron bubble and froth. You carefully pour the potion into a bottle. You now have a Potion of Ajar.")
+            }
+            if (debugger.on) {
+              msg ("cauldron count:"+cauldron_count+" expected:"+expected_count+" valid:"+valid_count)
+            }
+          }
+        </phasmatos>
+      </object>
+    </object>
+    <object name="carpet">
+      <inherit name="editor_object" />
+      <inherit name="surface" />
+      <scenery type="boolean">false</scenery>
+      <look>Dark brown and thick. It seems to be woven from a natural fibre.</look>
+      <feature_container />
+      <contentsprefix>underneath it is</contentsprefix>
+      <hidechildren />
+      <listchildren />
+      <listchildrenprefix>underneath it is</listchildrenprefix>
+      <lookunder>Whatever it is, the carpet covers it completely. Try move the carpet for a better view?</lookunder>
+      <move type="script">
+        if (not carpet.moved) {
+          carpet.moved = true
+          MakeObjectVisible (trapdoor)
+          msg ("You move the carpet aside, a trapdoor is revealed!")
+        }
+        else {
+          msg ("No, it is good where it is.")
+        }
+      </move>
+      <object name="torn page">
+        <inherit name="editor_object" />
+        <visible />
+        <alias>page</alias>
+        <look>A torn page with a potion recipe on it.</look>
+        <take type="script">
+          AddToInventory (torn page)
+          msg ("You take the page. Something else is under the carpet...")
+        </take>
+      </object>
+    </object>
+    <object name="chair">
+      <inherit name="editor_object" />
+      <look>A sturdy wooden frame made from dark wood.</look>
+      <sit>You sit on the chair for a moment to rest your feet. You get back up.</sit>
+    </object>
+    <object name="trapdoor">
+      <inherit name="editor_object" />
+      <inherit name="openable" />
+      <visible type="boolean">false</visible>
+      <look>Made from darkwood with steel inset, it looks heavy.</look>
+      <feature_container />
+      <close type="boolean">false</close>
+      <open />
+      <openscript type="script">
+        msg ("The door has no handle. You don't see any way to pull it open.")
+      </openscript>
+    </object>
+    <object name="potion of ajar">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+      <alias>Potion of Ajar</alias>
+      <look>A glowing fluid that is pink in color. It smells and tastes like vegetables.</look>
+      <feature_usegive />
+      <selfuseon type="scriptdictionary">
+        <item key="trapdoor">
+          HelperOpenObject (trapdoor)
+          msg ("The potion envelopes the trapdoor, it vibrates and is flung open. You see a room full of Emeralds, the green glow spills into the house. A ladder leads down.")
+          MakeExitVisible (mystic house basement entrance)
+          RemoveObject (potion of ajar)
+        </item>
+      </selfuseon>
+    </object>
+    <exit name="mystic house basement entrance" alias="down" to="Mystic House Basement">
+      <inherit name="downdirection" />
+      <visible type="boolean">false</visible>
+      <suffix>to the Emerald cave</suffix>
+    </exit>
+  </object>
+  <verb>
+    <property>say</property>
+    <pattern>say</pattern>
+    <defaultexpression>"You can't say " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>remove</property>
+    <pattern>remove</pattern>
+    <defaultexpression>"You can't remove " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>put</property>
+    <pattern>put</pattern>
+    <defaultexpression>"You can't put " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>lookin</property>
+    <pattern>look in</pattern>
+    <defaultexpression>"You can't look in " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>phasmatos</property>
+    <pattern>phasmatos</pattern>
+    <defaultexpression>"You can't phasmatos " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>pour</property>
+    <pattern>pour</pattern>
+    <defaultexpression>"You can't pour " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>pourontrapdoor</property>
+    <pattern>pour #object# on trapdoor</pattern>
+    <defaultexpression>"You can't pour #object# on trapdoor " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Mystic House Basement">
+    <inherit name="editor_room" />
+    <alias>Emerald Cave</alias>
+    <enter type="script">
+      msg ("You decend down to the Emerald cave. Most of the stones are embedded in the walls, one is propped up on a granite pedestal. You remove the Emerald and slot it in to the amulet.")
+      wait {
+        AddAmuletStone
+        wait {
+          MoveObject (book, Mystic House)
+          MoveObject (Ivy Veil, Catacombs)
+        }
+      }
+    </enter>
+  </object>
+  <object name="Catacombs">
+    <inherit name="editor_room" />
+    <description>You are standing in front of a mountain, there are stairs carved into the rock, leading down into the dark.</description>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <beforefirstenter type="script"><![CDATA[
+      msg ("<h1>Chapter III</h1><br/><br/>Five days pass, the Amulet leads you onward. You don't know where you are, only that it is a desolate and dangerous place filled with rocky outcrops and barren plateaus.")
+      wait {
+      }
+    ]]></beforefirstenter>
+    <firstenter type="script">
+    </firstenter>
+    <exit alias="north" to="CatacombCell3">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell1">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>northeast</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="northeast" to="CatacombCell2">
+      <inherit name="northeastdirection" />
+    </exit>
+    <exit alias="north" to="CatacombCell6">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell2">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>north</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="southwest" to="CatacombCell1">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="north" to="CatacombCell7">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="southeast" to="CatacombCell3">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell3">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>northwest</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+      msg ("Your amulet glows, giving you just enough light to see the bleak interior.")
+      EnableTurnScript (CatacombsHelp)
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="northwest" to="CatacombCell2">
+      <inherit name="northwestdirection" />
+    </exit>
+    <exit alias="south" to="Catacombs">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell4">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>north</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="northwest" to="CatacombCell8">
+      <inherit name="northwestdirection" />
+    </exit>
+    <exit alias="north" to="CatacombCell9">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="southeast" to="CatacombCell5">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell5">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>northwest</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="northwest" to="CatacombCell4">
+      <inherit name="northwestdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell6">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>south</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="south" to="CatacombCell1">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="north" to="CatacombCell11">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell7">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>southeast</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="south" to="CatacombCell2">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="southeast" to="CatacombCell8">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell8">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>southeast</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="southeast" to="CatacombCell4">
+      <inherit name="southeastdirection" />
+    </exit>
+    <exit alias="northwest" to="CatacombCell7">
+      <inherit name="northwestdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell9">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>southeast</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="south" to="CatacombCell4">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="southeast" to="CatacombCell10">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell10">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>north</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="northwest" to="CatacombCell9">
+      <inherit name="northwestdirection" />
+    </exit>
+    <exit alias="north" to="CatacombCell15">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell11">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>south</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="south" to="CatacombCell6">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="northeast" to="CatacombCell12">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell12">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>southwest</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="southwest" to="CatacombCell11">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="northeast" to="CatacombCell18">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell13">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>north</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="north" to="CatacombCell18">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell14">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>north</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="north" to="CatacombCell19">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="southeast" to="CatacombCell15">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell15">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>northwest</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="south" to="CatacombCell10">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="northwest" to="CatacombCell14">
+      <inherit name="northwestdirection" />
+    </exit>
+    <exit alias="north" to="CatacombCell20">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="obsidian sword">
+      <inherit name="editor_object" />
+      <alias>Obsidian Sword</alias>
+      <look>A black sword made from Obsidian, the light from your amulet reflecting off it's blade.</look>
+      <take />
+    </object>
+  </object>
+  <object name="CatacombCell16">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>north</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="north" to="CatacombCell21">
+      <inherit name="northdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell17">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>southeast</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="north" to="CatacombCell22">
+      <inherit name="northdirection" />
+    </exit>
+    <exit alias="southeast" to="CatacombCell18">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell18">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>southwest</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="southwest" to="CatacombCell12">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="south" to="CatacombCell13">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="northwest" to="CatacombCell17">
+      <inherit name="northwestdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell19">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>northeast</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="south" to="CatacombCell14">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="northeast" to="CatacombCell25">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell20">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>south</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="south" to="CatacombCell15">
+      <inherit name="southdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell21">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>northeast</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="south" to="CatacombCell16">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="northeast" to="CatacombCell22">
+      <inherit name="northeastdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell22">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>south</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="south" to="CatacombCell17">
+      <inherit name="southdirection" />
+    </exit>
+    <exit alias="southwest" to="CatacombCell21">
+      <inherit name="southwestdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell23">
+    <inherit name="editor_room" />
+    <alias>King's Chamber</alias>
+    <insightdir type="string"></insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+      DisableTurnScript (CatacombsHelp)
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="northeast" to="CatacombCell24">
+      <inherit name="northeastdirection" />
+    </exit>
+    <object name="kings tomb">
+      <inherit name="editor_object" />
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <alias>King's tomb</alias>
+      <alt type="stringlist">
+        <value>tomb</value>
+      </alt>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <prefix>the</prefix>
+      <look>A great stone tomb rests peacefully in the center of the room.</look>
+      <feature_container />
+      <hidechildren type="boolean">false</hidechildren>
+      <listchildren type="boolean">false</listchildren>
+      <close type="boolean">false</close>
+      <keycount type="int">1</keycount>
+      <nokeymessage>The tomb does not have any locks you can see. It must be opened some other way.</nokeymessage>
+      <autoopen type="boolean">false</autoopen>
+      <autounlock type="boolean">false</autounlock>
+      <locked />
+      <key type="object">impossible key</key>
+      <object name="obsidian stone">
+        <inherit name="editor_object" />
+        <alias>Obsidian stone</alias>
+        <look>A stone as black as night.</look>
+        <take type="script">
+          AddAmuletStone
+          RemoveObject (obsidian stone)
+          wait {
+            MakeExitVisible (catacomb end exit)
+            msg ("There is a sound of grinding stone, a hidden door moves open and you see daylight pierce the darkness.")
+          }
+        </take>
+      </object>
+    </object>
+    <object name="gargoyle">
+      <inherit name="editor_object" />
+      <inherit name="male" />
+      <alias>Gargoyle</alias>
+      <feature_usegive />
+      <look type="script">
+        if (Contains (gargoyle,obsidian sword)) {
+          msg ("The Gargoyle has one claw held up to it's chest, the obsidian sword majestically displayed.")
+        }
+        else {
+          msg ("A large stone gargoyle looms here, one claw held up to it's chest, as if wanting to holding something.")
+        }
+      </look>
+      <give type="scriptdictionary">
+        <item key="obsidian sword">
+          HelperOpenObject (kings tomb)
+          MoveObject (obsidian sword, gargoyle)
+          msg ("You place the sword in the Gargoyle claw, it's eyes come alive with a red glow, and the tomb lid slides open!")
+        </item>
+      </give>
+    </object>
+    <object name="impossible key">
+      <inherit name="editor_object" />
+      <visible type="boolean">false</visible>
+    </object>
+    <exit name="catacomb end exit" alias="out" to="Forest Path">
+      <inherit name="outdirection" />
+      <visible type="boolean">false</visible>
+    </exit>
+  </object>
+  <object name="CatacombCell24">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>southwest</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="southwest" to="CatacombCell23">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="southeast" to="CatacombCell25">
+      <inherit name="southeastdirection" />
+    </exit>
+  </object>
+  <object name="CatacombCell25">
+    <inherit name="editor_room" />
+    <alias>Catacombs</alias>
+    <insightdir>northwest</insightdir>
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description type="script"><![CDATA[
+      if (amulet.ability = "insight") {
+        if (this.insightdir <> "") {
+          msg ("You sense the right way is " + this.insightdir)
+        }
+      }
+    ]]></description>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="southwest" to="CatacombCell19">
+      <inherit name="southwestdirection" />
+    </exit>
+    <exit alias="northwest" to="CatacombCell24">
+      <inherit name="northwestdirection" />
+    </exit>
+  </object>
+  <object name="Forest Path">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <description>You are on a forest path. Tall trees rise into the sky. The air smells of moss and wet stone.</description>
+    <alias>Forest Path</alias>
+    <beforefirstenter type="script"><![CDATA[
+      msg ("<h1>Chapter IV</h1><br/><br/>The amulet leads you away from the barren lands, for one week you journey from settlement to outpost. Fortune was good to you, food and shelter was no problem. You do however get the feeling of being watched. It's unsettling.")
+    ]]></beforefirstenter>
+    <object name="brown mushroom">
+      <inherit name="editor_object" />
+      <look>A large flat mushroom, brown on top and white underneath.</look>
+      <take />
+      <attr name="feature_edible" type="boolean">false</attr>
+      <eat type="script">
+        msg ("You eat it, you are no longer hungry.")
+        destroy (this.name)
+      </eat>
+    </object>
+    <object name="red mushroom">
+      <inherit name="editor_object" />
+      <look>A small round mushroom, red with white spots.</look>
+      <take />
+      <attr name="feature_edible" type="boolean">false</attr>
+      <eat type="script">
+        msg ("It tastes foul. Yuck!")
+        destroy (this.name)
+        SetTurnTimeout (6) {
+          SetTurnTimeout (20) {
+            set (Ivy Veil, "confused", false)
+            DisableTurnScript (ConfusedTurn)
+          }
+          set (Ivy Veil, "confused", true)
+          EnableTurnScript (ConfusedTurn)
+        }
+      </eat>
+    </object>
+    <exit alias="southwest" to="Forest">
+      <inherit name="southwestdirection" />
+    </exit>
+  </object>
+  <object name="Forest">
+    <inherit name="editor_room" />
+    <alias>Enchanted Forest</alias>
+    <description>{once:You enter deeper into the forest.} You see mossy rocks and a variety of plants: orchids, clovers and venus fly traps.</description>
+    <exit alias="northeast" to="Forest Path">
+      <inherit name="northeastdirection" />
+    </exit>
+    <object name="trees1">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <alias>trees</alias>
+      <look>Majestic darkwoods loom over you. Bulbs of Amber stone hang off the branches, like giant brilliant fruits.</look>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+    </object>
+    <object name="lights">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look> They give off a dim glow.</look>
+      <alt type="stringlist">
+        <value>amber</value>
+        <value>stones</value>
+        <value>amber stones</value>
+      </alt>
+      <take type="script">
+        msg ("The sprites won't appreciate you taking them. Best to ask them about it first.")
+      </take>
+    </object>
+    <object name="forest sprites">
+      <inherit name="editor_object" />
+      <inherit name="femaleplural" />
+      <alias>Forest Sprites</alias>
+      <look>These small creatures move about the lower tree branches with silent speed. Their bark-like skin and pointy features enable them to blend with their environment. They keep a safe distance from the path.</look>
+      <alt type="stringlist">
+        <value>sprite</value>
+      </alt>
+      <speak>They don't seem that interested in idle conversation.</speak>
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <feature_usegive />
+      <askdefault type="script">
+      </askdefault>
+      <ask type="scriptdictionary">
+        <item key="amber stone light"><![CDATA[
+          if (HasBoolean(forest sprites, "chant")) {
+            msg ("They chant, \"Go this way, go this way\".")
+          }
+          else {
+            msg ("<br/>The sprites gather around you: \"The magic lights, magic lights, full of life they are!\"")
+            msg ("You speak carefully, \"Forest spirits, may I have an Amber stone?\"")
+            msg ("\"Important quests derserve important gifts\", the sprites chant in dischord.")
+            wait {
+              msg ("<br/>\"You know of my quest?\", you ask.")
+              msg ("\"We know. We know much. And we need help, for help we give.\", they scatter and dance.")
+              msg ("\"Help?\", you ask.")
+              wait {
+                msg ("<br/>\"A stolen thing, we need it back. The Vorpal Drum, taken from us.\"")
+                msg ("\"A fair request\", you play along, \"Who took your Drum and where can I find it?\"")
+                msg ("\"The who does not matter, the where we can't say. A task must be done one, or another, way.\"")
+                wait {
+                  msg ("<br/>The sprites scatter and dance, leading your eyes to a small trail off the main path.")
+                  msg ("They chant, \"Go this way, go this way\".")
+                  set (forest sprites, "chant", true)
+                  MakeExitVisible (Goblin Camp Entrance)
+                }
+              }
+            }
+          }
+        ]]></item>
+      </ask>
+      <give type="scriptdictionary">
+        <item key="Vorpal Drum">
+          MoveObject (Vorpal Drum, forest sprites)
+          msg ("\"The Drum! The Drum!\", the sprites chant. They release one of the Amber stones from a tree, you catch it.")
+          wait {
+            AddAmuletStone
+            msg ("\"We will remember you, Ivy Veil\", the sprites dance.")
+            SetTimeout (3) {
+              wait {
+                MoveObject (Ivy Veil, Epilogue)
+              }
+            }
+          }
+        </item>
+      </give>
+    </object>
+    <turnscript name="ConfusedTurn">
+      <script>
+        if (HasBoolean(Ivy Veil, "confused")) {
+          if (GetBoolean(Ivy Veil, "confused") = true) {
+            if (RandomChance (42)) {
+              random_thing = Pick ("Bone Kangaroo ;Etheral Phantasm ;Hallucinating Light Koala ;Klutzy Phantasm ;Madness Wombat ;Paint Spirit ;Paranoid Ash Pigeon ;Phantasmal Homonculus ;Vanilla Elemental ;Wimpy Wyrm ;Ectoplasm Snail ;Bug Scorpion ;Chimera Child ;Demon Ghoul ;Dog Centipede ;Emperor Ray Slayer ;Gearleaf ;Grimoireemerald Cremator ;Hornet Demon ;Penta Jungle Elemental ;Queen Scroll Beetle ;Riverroot Hypnotizer")
+              msg ("You can see a " + random_thing)
+            }
+          }
+        }
+      </script>
+    </turnscript>
+    <exit name="Goblin Camp Entrance" alias="west" to="Goblin Camp">
+      <inherit name="westdirection" />
+      <visible type="boolean">false</visible>
+      <suffix>on the trail</suffix>
+    </exit>
+    <object name="moss">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look>It covers most of the rocks, it is slippery to walk on.</look>
+    </object>
+    <object name="clovers">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look type="script">
+        msg ("Patches of clover grow between the rocks.")
+        if (not ListContains(ScopeVisible(), Lucky Clover)) {
+          msg ("You notice one clover with four leaves.")
+          MakeObjectVisible (Lucky Clover)
+        }
+      </look>
+    </object>
+    <object name="rocks">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look>Rocks of all sizes scatter the forest floor.</look>
+    </object>
+    <object name="orchids">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <scenery />
+      <look>Flowering orchids of unusual shapes and beautiful colours.</look>
+      <takemsg>The orchids are beautiful but you don't need them.</takemsg>
+    </object>
+    <object name="venus fly traps">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <scenery />
+      <look>Carnivorous plants that catch insects and spiders. Let's hope there are none big enough to catch you...</look>
+      <takemsg>You do not need a carnivorous plant in your pocket.</takemsg>
+    </object>
+    <object name="Lucky Clover">
+      <inherit name="editor_object" />
+      <take />
+      <alias>four leafed clover</alias>
+      <visible type="boolean">false</visible>
+      <takemsg>You carefully pick the lucky clover and put it in your pocket.</takemsg>
+      <look>each leaf is believed to represent something: the first is for faith, the second is for hope, the third is for love, and the fourth is for luck.</look>
+      <alt type="stringlist">
+        <value>four leaf clover</value>
+        <value>four leafed clover</value>
+      </alt>
+    </object>
+  </object>
+  <object name="Goblin Camp">
+    <inherit name="editor_room" />
+    <description>{once:You hear bantering voices.}</description>
+    <enter type="script">
+    </enter>
+    <exit alias="east" to="Forest">
+      <inherit name="eastdirection" />
+      <suffix>to the Forest</suffix>
+    </exit>
+    <object name="Goblins">
+      <inherit name="editor_object" />
+      <inherit name="maleplural" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look>Small mean looking green creates. They appear to be gambling with dice.</look>
+      <speak>They ignore you. {once:You hear the word "Drum" in their bantering.}</speak>
+      <gamblewith type="script"><![CDATA[
+        if (GetBoolean(Goblins, "ignore player")) {
+          msg ("The goblins ignore you. They must be sore losers.")
+        }
+        else {
+          if (GetBoolean(Goblins, "cangamble")) {
+            msg ("\"So you want to wager you can beat us? Ha ha ha!\", they laugh mockingly.<br/>\"Roll the dice, highest wins. Lets play!\", a goblins hands you three dice.<br/>You need to <i>Roll Dice</i>")
+          }
+          else {
+            msg ("The goblins ignore you")
+          }
+        }
+      ]]></gamblewith>
+      <ask type="scriptdictionary">
+        <item key="Vorpal Drum"><![CDATA[
+          msg ("\"Ye we know who has the Drum! If you want to know, you must <i>gamble with us</i>, and beat us too!\"")
+          SetObjectFlagOn (Goblins, "cangamble")
+        ]]></item>
+      </ask>
+    </object>
+    <object name="dice">
+      <inherit name="editor_object" />
+      <inherit name="plural" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <scenery />
+      <visible />
+      <look>The are carved out of bone.</look>
+      <roll type="script"><![CDATA[
+        if (GetBoolean(Goblins, "ignore player")) {
+          msg ("The goblins ignore you. They must be sore losers.")
+        }
+        else {
+          if (GetBoolean(Goblins, "cangamble")) {
+            bad_rolls = GetInt(dice, "bad rolls")
+            good_rolls = GetInt(dice, "good rolls")
+            they_roll = DiceRoll("3d6")
+            win_word = "lose."
+            if (Got(Lucky Clover)) {
+              good_rolls = good_rolls + 1
+              set (dice, "good rolls", good_rolls)
+              you_roll = they_roll + GetRandomInt(1, 3)
+              win_word = "<b>win</b>."
+            }
+            else {
+              bad_rolls = bad_rolls + 1
+              set (dice, "bad rolls", bad_rolls)
+              you_roll = they_roll - GetRandomInt(1, 3)
+            }
+            msg ("They roll <b>" + they_roll + "</b>, You roll <b>" + you_roll + "</b>. You " + win_word)
+            if (Got(Lucky Clover)) {
+              if (good_rolls = 1) {
+                msg ("\"A fluke!\", a goblin shouts.")
+              }
+              else if (good_rolls = 2) {
+                msg ("\"I bet you can't win a third time...\", another goblin grumbles.")
+              }
+              else if (good_rolls = 3) {
+                msg ("\"Three in a row, enough! The Wolves took the Vorpal Drum. Their den lies North. Now leave us!\"")
+                MakeExitVisible (wolf den entrance)
+                set (Goblins, "ignore player", true)
+              }
+            }
+            else {
+              if (bad_rolls % 3 = 0) {
+                msg ("\"Ha ha ha, fool\" a goblin taunts, \"you need a good luck charm!\"")
+              }
+            }
+          }
+          else {
+            msg ("You are not playing with them.")
+          }
+        }
+      ]]></roll>
+    </object>
+    <exit name="wolf den entrance" alias="north" to="Wolf Den">
+      <inherit name="northdirection" />
+      <visible type="boolean">false</visible>
+      <suffix>to the wolve's den</suffix>
+    </exit>
+  </object>
+  <verb>
+    <property>roll</property>
+    <pattern>roll</pattern>
+    <defaultexpression>"You can't roll " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>gamblewith</property>
+    <pattern>gamble with</pattern>
+    <defaultexpression>"You can't gamble with " + object.article + "."</defaultexpression>
+  </verb>
+  <object name="Wolf Den">
+    <inherit name="editor_room" />
+    <description>It is dark and smells of decay.</description>
+    <enter type="script">
+    </enter>
+    <object name="wolves">
+      <inherit name="editor_object" />
+      <inherit name="femaleplural" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look>They look fierce.</look>
+    </object>
+    <object name="Vorpal Drum">
+      <inherit name="editor_object" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <look>A magical percussion instrument.</look>
+      <prefix>the</prefix>
+      <take type="script">
+        msg ("You move slow and deliberately towards the Vorpal Drum, you reach out for it...")
+        msg ("The wolves pounce on you!")
+        if (amulet.ability = "strength") {
+          msg ("They are no match for your mighty strength, you fling them off like rag dolls, they wimper and scatter into the shadows.")
+          msg ("You take the Vorpal Drum and leave their den.")
+          AddToInventory (Vorpal Drum)
+          wait {
+            MoveObject (Ivy Veil, Forest)
+            MakeExitInvisible (Goblin Camp Entrance)
+          }
+        }
+        else {
+          msg ("You are too weak to fight them off, you feel your limbs torn off.")
+          msg ("Your vision fades to black.")
+          wait {
+            MoveObject (Ivy Veil, Rabbit Hole)
+          }
+        }
+      </take>
+    </object>
+  </object>
+  <turnscript name="CatacombsHelp">
+    <script><![CDATA[
+      if (amulet.ability <> "insight") {
+        move_count = GetInt(kings tomb, "move count") + 1
+        set (kings tomb, "move count", move_count)
+        if (move_count % 8 = 0) {
+          msg ("You sense your amulet is trying to tell you something...")
+        }
+      }
+    ]]></script>
+  </turnscript>
+  <object name="Rabbit Hole">
+    <inherit name="editor_room" />
+    <description>{once:You wake up in a strange place. }You are crawling, and cannot stand up. It is pitch black around you. The ground feels like it is covered in cotton balls. You see a light.</description>
+    <onexit type="script">
+      msg ("You crawl out of the hole and clean the dirt off your clothes.")
+    </onexit>
+    <enter type="script">
+    </enter>
+    <beforeenter type="script">
+    </beforeenter>
+    <exit alias="out" to="Forest Path">
+      <inherit name="outdirection" />
+    </exit>
+  </object>
+  <object name="Epilogue">
+    <inherit name="editor_room" />
+    <usedefaultprefix type="boolean">false</usedefaultprefix>
+    <beforefirstenter type="script">
+    </beforefirstenter>
+    <onexit type="script">
+    </onexit>
+    <enter type="script"><![CDATA[
+      msg ("You journey back to the city, past the Catacombs and the Mystic Woods. The amulet guides and protects you along the way.<br/><br/>You find Rain Arcana locked in a cell, you free him with the help of the Amulet. He uses the Amulet to free the other magicians, and together they break the tyranny of Burnspring the Sorcerous.<br/><br/>Your arduous journey has ended. The land rejoices and the people thank you for your bravery.")
+      wait {
+        msg ("<p><b>Thank you for playing!</b></p>")
+        SetTimeout (2) {
+          TextFX_Typewriter ("Ivy Veil and the Amulet of Power.", 100)
+        }
+        SetTimeout (6) {
+          TextFX_Typewriter ("Written by Wesley Werner, Sep 2016.", 100)
+        }
+        SetTimeout (10) {
+          TextFX_Typewriter ("For Jade, the love of my life.", 100)
+          finish
+        }
+      }
+    ]]></enter>
+    <beforeenter type="script"><![CDATA[
+      msg ("<h1>Chapter V</h1>")
+    ]]></beforeenter>
+  </object>
+  <verb>
+    <property>lookunder</property>
+    <pattern>look under</pattern>
+    <defaultexpression>"You can't look under " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>fill</property>
+    <pattern>fill</pattern>
+    <defaultexpression>"You can't fill " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>fillwithwater</property>
+    <pattern>fill #object# with water</pattern>
+    <defaultexpression>"You can't fill #object# with water " + object.article + "."</defaultexpression>
+  </verb>
+  <function name="AddAmuletStone"><![CDATA[
+    // Add a stone to the amulet, Increasing it's level.
+    if (amulet.level < 4) {
+      set (amulet, "level", amulet.level + 1)
+      msg ("You gained a new stone in your amulet!")
+      do (amulet, "use")
+    }
+  ]]></function>
+  <function name="RemoveAmuletStone"><![CDATA[
+    // Remove a stone from the amulet, reducing it's level.
+    if (amulet.level > 0) {
+      set (amulet, "level", amulet.level -1)
+      msg ("Your amulet lost a stone!")
+      do (amulet, "use")
+    }
+  ]]></function>
+  <function name="UseAbility" parameters="name">
+    amulet.ability = LCASE(name)
+    amulet.time = amulet.turn_duration
+  </function>
+  <function name="AmuletTurnStep"><![CDATA[
+    // Turn step for active amulet abilities. Let the player know when the ability is almost worn off, and when it is completed expired.
+    if (amulet.time > 0) {
+      amulet.time = amulet.time - 1
+      if (amulet.time = amulet.turn_warn) {
+        msg ("You feel your " + amulet.ability + " ability fading ...")
+      }
+      if (amulet.time = 0) {
+        msg ("Your " + amulet.ability + " ability has worn off")
+        amulet.ability = ""
+      }
+    }
+  ]]></function>
+  <function name="DebugTurnStep">
+    if (debugger.on) {
+      msg ("[DEBUGGER]")
+      OutputTextNoBr ("ability:" + amulet.ability + " time:" + amulet.time + " worn:" + amulet.worn)
+      if (game.pov.parent = Hill Top) {
+        OutputTextNoBr (" frogword:" + frog.magicword + " apples:" + appletree.color)
+      }
+    }
+  </function>
+  <function name="Pick" parameters="itemstring" type="string">
+    // Picks a random item from a semi-colon separated string
+    lst = Split(itemstring, ";")
+    index = GetRandomInt(0, ListCount(lst) - 1)
+    return (StringListItem(lst, index))
+  </function>
+  <function name="UseItemWithCauldron" parameters="item"><![CDATA[
+    if (item.parent = jars) {
+      MoveObject (GetObject(item.name), cauldron)
+      msg ("" + item.alias +  " <b>added</b> to the cauldron")
+      ListCauldronContents
+    }
+    else if (item.parent = cauldron) {
+      MoveObject (item, jars)
+      msg ("" + item.alias + " <b>removed</b> from the cauldron")
+      ListCauldronContents
+    }
+  ]]></function>
+  <function name="ListCauldronContents">
+    lst = NewStringList()
+    foreach (o, GetDirectChildren(cauldron)) {
+      list add (lst, o.alias)
+    }
+    // output
+    if (listCount(lst) = 0) {
+      msg ("Cauldron is empty")
+    }
+    else {
+      msg ("Cauldron contains " + Join(lst, ", ") + ".")
+    }
+  </function>
+</asl>

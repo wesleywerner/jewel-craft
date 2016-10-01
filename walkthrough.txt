@@ -1,0 +1,88 @@
+# Chapter I
+
+> open door
+> go out
+> go north (Orchid)
+> look at tree (note apple colour)
+> go north (the pond)
+> go northwest (the trail)
+> ask the riddler about the amethyst
+
+The answer to his riddle has no bearing on your progress, but if you must know, it is "fire".
+
+> take cup
+> go southeast (the pond)
+> use cup on pond
+> talk to frog (note what he says)
+> go northwest (the trail)
+> give cup to riddler
+
+Answer him when he asks what the dragonfrog said, and the colour of the apples.
+
+> take stone
+> go southeast
+> go south
+> go south
+> go east
+
+# Chapter II
+
+> look at house
+> use amulet for protection (allows you to counteract the magic that keeps the door closed)
+> open door
+> go in
+> look at carpet
+> take page
+> move carpet
+> look at library
+> take book
+> use page with book
+> look at table
+> open jars
+> read recipe
+> use lavender
+> use eye of newt
+> use forbidden tonic
+> phasmatos siprum
+> use potion on trapdoor
+> go down
+
+# Chapter III
+
+> use amulet for insight (provides a sense of direction through the maze)
+> go north
+> go northwest
+> go north
+> go southeast
+> go southeast
+> go north
+> go southeast
+> go north
+> take sword
+> go northwest
+> go north
+> go northeast
+> go northwest
+> go southwest
+> give sword to gargoyle
+> take stone
+> go out
+
+# Chapter IV
+
+You can eat the mushrooms here, the red one makes you see things for about 20 turns.
+
+> go southwest (forest)
+> ask sprites about amber stones
+> look at clovers
+> take four leaf clover
+> go west (goblin camp)
+> ask goblins about drum
+> gamble with goblins (the lucky clover allows you to win)
+> roll dice
+> roll dice
+> roll dice
+> go north (wolf den)
+> use amulet for strength (allows you to fight them off)
+> take drum
+> give drum to sprites
