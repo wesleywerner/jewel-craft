@@ -45,8 +45,9 @@
       amulet.time = 0
       amulet.worn = false
       debugger.on = false
-      MoveObject (Ivy Veil, Prologue)
+      MoveObject (Ivy Veil, Mystic House)
     </start>
+    <description>Jewel Craft is a fantasy adventure. Ivy Veil is on a quest: find the four stones for the Amulet of Power.</description>
   </game>
   <object name="Prologue">
     <inherit name="editor_room" />
@@ -457,6 +458,7 @@
       <alias>Riddler</alias>
       <prefix>the</prefix>
       <feature_usegive />
+      <speak><![CDATA["Do you want to <i>ask</i> me about something?"]]></speak>
       <ask type="scriptdictionary">
         <item key="stone amethyst"><![CDATA[
           if (not Got(claycup)) {
@@ -513,7 +515,6 @@
           }
         ]]></item>
       </give>
-      <speak><![CDATA["Do you want to <i>ask</i> me about something?"]]></speak>
     </object>
     <object name="claycup">
       <inherit name="editor_object" />
@@ -619,13 +620,26 @@
         <openscript type="script"><![CDATA[
           if (amulet.ability <> "protection") {
             HelperCloseObject (mystic house door)
-            msg ("The door slams shut on it's own volition.")
+            msg ("The door slams shut on it's own volition, like it is <i>protected</i>. You need to counteract it somehow.")
           }
           else {
             msg ("The door creaks open, you sigh with relief and thank the amulet for it's protection.")
             UnlockExit (mystic house entrance)
           }
         ]]></openscript>
+      </object>
+      <object name="chimney">
+        <inherit name="editor_object" />
+        <alt type="stringlist">
+          <value>hearth</value>
+        </alt>
+        <scenery />
+        <look>Smoke rises out the top.</look>
+      </object>
+      <object name="walls">
+        <inherit name="editor_object" />
+        <scenery />
+        <look>Made from thick logs.</look>
       </object>
     </object>
     <exit name="mystic house entrance" alias="in" to="Mystic House">
@@ -657,6 +671,7 @@
       <listchildren />
       <object name="book">
         <inherit name="editor_object" />
+        <inherit name="container_open" />
         <usedefaultprefix />
         <prefix>some</prefix>
         <look><![CDATA[A book titled "Basic Magical Art". {once:It is practically incomprehensible. Delightfully, the concepts and information do show a great deal of insight.}<br/>{if book.torn:One of the pages is torn in half, you can make out the word "Ajar".}<br/>{if not book.torn:You see a recipe for "Potion of Ajar".}]]></look>
@@ -684,17 +699,13 @@
           }
         ]]></read>
         <useon type="scriptdictionary">
-          <item key="torn page">
-            if (Got(book)) {
-              book.torn = false
-              msg ("You place the page inside the book. The torn pages magically join and become whole. It reveals a potion recipe!")
-              RemoveObject (torn page)
-            }
-            else {
-              msg ("You don't have the book")
-            }
-          </item>
+          <item key="torn page"><![CDATA[
+            msg ("Did you mean to <i>place page in book?</i>")
+          ]]></item>
         </useon>
+        <attr name="feature_container" type="boolean">false</attr>
+        <open type="boolean">false</open>
+        <close type="boolean">false</close>
       </object>
     </object>
     <object name="mystic table">
@@ -829,6 +840,7 @@
               AddToInventory (potion of ajar)
               HelperCloseObject (jars)
               msg ("The incantation makes the cauldron bubble and froth. You carefully pour the potion into a bottle. You now have a Potion of Ajar.")
+              MakeObjectInvisible (herbs)
             }
             if (debugger.on) {
               msg ("cauldron count:"+cauldron_count+" expected:"+expected_count+" valid:"+valid_count)
@@ -867,6 +879,16 @@
           AddToInventory (torn page)
           msg ("You take the page. Something else is under the carpet...")
         </take>
+        <placeinbook type="script">
+          if (Got(book)) {
+            book.torn = false
+            msg ("You place the page inside the book. The torn pages magically join and become whole. It reveals a potion recipe!")
+            RemoveObject (torn page)
+          }
+          else {
+            msg ("You don't have the book")
+          }
+        </placeinbook>
       </object>
     </object>
     <object name="chair">
@@ -906,6 +928,14 @@
       <visible type="boolean">false</visible>
       <suffix>to the Emerald cave</suffix>
     </exit>
+    <object name="herbs">
+      <inherit name="editor_object" />
+      <alt type="stringlist">
+        <value>potion</value>
+      </alt>
+      <scenery />
+      <look>There are potions and herbs on every shelf and hanging from every beam. </look>
+    </object>
   </object>
   <verb>
     <property>say</property>
@@ -1745,7 +1775,7 @@
       <script>
         if (HasBoolean(Ivy Veil, "confused")) {
           if (GetBoolean(Ivy Veil, "confused") = true) {
-            if (RandomChance (42)) {
+            if (RandomChance (15)) {
               random_thing = Pick ("Bone Kangaroo ;Etheral Phantasm ;Hallucinating Light Koala ;Klutzy Phantasm ;Madness Wombat ;Paint Spirit ;Paranoid Ash Pigeon ;Phantasmal Homonculus ;Vanilla Elemental ;Wimpy Wyrm ;Ectoplasm Snail ;Bug Scorpion ;Chimera Child ;Demon Ghoul ;Dog Centipede ;Emperor Ray Slayer ;Gearleaf ;Grimoireemerald Cremator ;Hornet Demon ;Penta Jungle Elemental ;Queen Scroll Beetle ;Riverroot Hypnotizer")
               msg ("You can see a " + random_thing)
             }
@@ -1823,7 +1853,7 @@
       <inherit name="editor_object" />
       <inherit name="maleplural" />
       <usedefaultprefix type="boolean">false</usedefaultprefix>
-      <look>Small mean looking green creates. They appear to be gambling with dice.</look>
+      <look>Small mean looking creatures. They appear to be gambling with dice.</look>
       <speak>They ignore you. {once:You hear the word "Drum" in their bantering.}</speak>
       <gamblewith type="script"><![CDATA[
         if (GetBoolean(Goblins, "ignore player")) {
@@ -2019,6 +2049,11 @@
     <property>fillwithwater</property>
     <pattern>fill #object# with water</pattern>
     <defaultexpression>"You can't fill #object# with water " + object.article + "."</defaultexpression>
+  </verb>
+  <verb>
+    <property>placeinbook</property>
+    <pattern>place #object# in book</pattern>
+    <defaultexpression>"You can't place #object# in book " + object.article + "."</defaultexpression>
   </verb>
   <function name="AddAmuletStone"><![CDATA[
     // Add a stone to the amulet, Increasing it's level.
