@@ -35,6 +35,7 @@
     <cover>cover.png</cover>
     <backgroundimage type="string"></backgroundimage>
     <defaultfontsize type="int">14</defaultfontsize>
+    <description>Jewel Craft is a fantasy adventure. Ivy Veil is on a quest: find the four stones for the Amulet of Power.</description>
     <pov type="object">Ivy Veil</pov>
     <start type="script">
       // Set number of turns an amulet ability lasts, and at which turn to warn the player before it expires completely.
@@ -45,9 +46,7 @@
       amulet.time = 0
       amulet.worn = false
       debugger.on = false
-      MoveObject (Ivy Veil, Mystic House)
     </start>
-    <description>Jewel Craft is a fantasy adventure. Ivy Veil is on a quest: find the four stones for the Amulet of Power.</description>
   </game>
   <object name="Prologue">
     <inherit name="editor_room" />
@@ -681,6 +680,9 @@
         <alt type="stringlist">
           <value>recipe</value>
         </alt>
+        <attr name="feature_container" type="boolean">false</attr>
+        <open type="boolean">false</open>
+        <close type="boolean">false</close>
         <read type="script"><![CDATA[
           if (Got(book)) {
             if (book.torn = true) {
@@ -703,9 +705,6 @@
             msg ("Did you mean to <i>place page in book?</i>")
           ]]></item>
         </useon>
-        <attr name="feature_container" type="boolean">false</attr>
-        <open type="boolean">false</open>
-        <close type="boolean">false</close>
       </object>
     </object>
     <object name="mystic table">
