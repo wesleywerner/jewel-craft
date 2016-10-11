@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Skein rootNode="node-0">
+  <generator>Windows Inform 7 6M62</generator>
+  <activeNode nodeId="node-144"/>
+  <item nodeId="node-0">
+    <command xml:space="preserve">- start -</command>
+    <result xml:space="preserve">It is the Rising Epoch of Spells. A time of great discovery and powerful magic. But something terribly bad is about to happen.&#x000A;&#x000A;Jewel Craft, Ivy Veil and the Amulet of Power&#x000A;An Interactive Fiction by Wesley Werner&#x000A;Release 1 / Serial number 161011 / Inform 7 build 6M62 (I6/v6.33 lib 6/12N) SD&#x000A;&#x000A;Your friend Rain Arcana bursts through your door: "Ivy! We need your help!"&#x000A;"What is going on, Rain?"&#x000A;"Burnspring the Sorcerous trapped the magician's guild in a powerful spell, the city is powerless against him!" he pants.&#x000A;"My help? I make jewelry, how in the name of Anerat can I help?", you feel uneasy.&#x000A;Rain steadies himself, "Our magicians are trapped, to be sure, and I fear I will be taken soon."&#x000A;Rain holds out an amulet for you to take.&#x000A;&#x000A;Your Home&#x000A;A cosy place.&#x000A;&#x000A;You can see an Amulet and a wooden door here.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>NO</changed>
+    <temporary score="0">NO</temporary>
+    <children>
+      <child nodeId="node-134"/>
+    </children>
+  </item>
+  <item nodeId="node-134">
+    <command xml:space="preserve">go out</command>
+    <result xml:space="preserve">(first opening the wooden door)&#x000A;Best you take the amulet with you.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <children>
+      <child nodeId="node-135"/>
+    </children>
+  </item>
+  <item nodeId="node-135">
+    <command xml:space="preserve">go out</command>
+    <result xml:space="preserve">(first opening the wooden door)&#x000A;Best you take the amulet with you.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <children>
+      <child nodeId="node-136"/>
+    </children>
+  </item>
+  <item nodeId="node-136">
+    <command xml:space="preserve">look</command>
+    <result xml:space="preserve">Your Home&#x000A;A cosy place.&#x000A;&#x000A;You can see an Amulet and a wooden door here.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <children>
+      <child nodeId="node-137"/>
+    </children>
+  </item>
+  <item nodeId="node-137">
+    <command xml:space="preserve">take amulet</command>
+    <result xml:space="preserve">The amulet feels solid and reassuring in your palms. "What is this?"&#x000A;Rain leans in, "The Amulet of Power. It will help us defeat Burnspring, you need to find the four missing stones, and return in time to save us all, Ivy."&#x000A;You feel dread, but reassured by the magical token. "How do I find these stones?"&#x000A;"Go find the Riddler on the Hill, the amulet will guide you from there.", he sighs.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <children>
+      <child nodeId="node-138"/>
+    </children>
+  </item>
+  <item nodeId="node-138">
+    <command xml:space="preserve">go out</command>
+    <result xml:space="preserve">(first opening the wooden door)&#x000A;&#x000A;Hill Path&#x000A;There is shrubbery and trees around you. You can hear water flowing, but cannot see much through the dense foliage. Town is due south, you have no need to go back there right now.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>YES</changed>
+    <temporary score="0">YES</temporary>
+    <children>
+      <child nodeId="node-139"/>
+    </children>
+  </item>
+  <item nodeId="node-139">
+    <command xml:space="preserve">x door</command>
+    <result xml:space="preserve">You can't see any such thing.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>YES</changed>
+    <temporary score="0">YES</temporary>
+    <children>
+      <child nodeId="node-140"/>
+    </children>
+  </item>
+  <item nodeId="node-140">
+    <command xml:space="preserve">look</command>
+    <result xml:space="preserve">Hill Path&#x000A;Town is due south, you have no need to go back there right now.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>YES</changed>
+    <temporary score="0">YES</temporary>
+    <children>
+      <child nodeId="node-141"/>
+    </children>
+  </item>
+  <item nodeId="node-141">
+    <command xml:space="preserve">go in\</command>
+    <result xml:space="preserve">You can't see any such thing.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <children>
+      <child nodeId="node-142"/>
+    </children>
+  </item>
+  <item nodeId="node-142">
+    <command xml:space="preserve">go in</command>
+    <result xml:space="preserve">You can't go that way.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <children>
+      <child nodeId="node-143"/>
+    </children>
+  </item>
+  <item nodeId="node-143">
+    <command xml:space="preserve">go out</command>
+    <result xml:space="preserve">You can't go that way.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>YES</changed>
+    <temporary score="0">YES</temporary>
+    <children>
+      <child nodeId="node-144"/>
+    </children>
+  </item>
+  <item nodeId="node-144">
+    <command xml:space="preserve">s</command>
+    <result xml:space="preserve">You can't go that way.&#x000A;&#x000A;&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+  </item>
+</Skein>
