@@ -1,18 +1,126 @@
 "Jewel Craft, Ivy Veil and the Amulet of Power" by Wesley Werner
 
+Section 1 - Testing Helpers - Not for release
+
+Adding a stone is an action out of world. 
+Carry out adding a stone:
+	if the level of the amulet is less than 3:
+		Increase the level of the amulet by 1;
+		say "You got a new stone (debug).";
+
+Section 2 - The amulet definition
+
 [the amulet]
-The Amulet is a thing. The description is "The amulet is seamless, like crafted from magic. There are four slots to hold four stones. You can [italic type]use amulet[roman type]."
+The Amulet is a thing. The description is "[if level of amulet is 0]There are four empty slots to hold four stones[end if][if level of amulet is greater than 0]You have the Amethyst stone[end if][if level of amulet is greater than 1], the Emerald stone[end if][if level of amulet is greater than 2], the Obsidian stone[end if][if level of amulet is greater than 3] and the Amber stone[end if].[line break][italic type][if level of amulet is greater than 0]You can use the amulet for [end if][if level of amulet is greater than 0]Protection[end if][if level of amulet is greater than 1], Insight[end if][if level of amulet is greater than 2], Strength[end if][if level of amulet is greater than 3] or Healing[end if][roman type]".
+Ability is a kind of value. The abilities are none, protection, insight, strength and healing.
+The amulet has an ability. The ability of the amulet is none.
+The amulet has a number called level. The amulet has level 0.
+The amulet has a number called time left. The time left of the amulet is 0.
+
+[constants used by the amulet abilities]
+The ability timeout is always 20.
+The ability warning is always 5.
+
+[amulet protection ability]
+Activating protection is an action applying to nothing. Understand "use amulet for protection" or "use the amulet for protection" as Activating protection.
+
+Check activating protection:
+	if the level of amulet is less than 1:
+		say "Your amulet does not have the stone for that ability.";
+		stop the action;
+	if the ability of the amulet is protection:
+		say "That ability is already activated.";
+		stop the action;
+
+Carry out activating protection:
+	if the ability of the amulet is not none:
+		say "Your ability of [ability of amulet] is now removed.";
+	now the ability of the amulet is protection;
+	now the time left of the amulet is the ability timeout;
+
+Report activating protection:
+	say "You feel protected from evil curses.";
+
+[amulet insight ability]
+Activating insight is an action applying to nothing. Understand "use amulet for insight" or "use the amulet for insight" as Activating insight.
+
+Check activating insight:
+	if the level of amulet is less than 2:
+		say "Your amulet does not have the stone for that ability.";
+		stop the action;
+	if the ability of the amulet is insight:
+		say "That ability is already activated.";
+		stop the action;
+
+Carry out activating insight:
+	if the ability of the amulet is not none:
+		say "Your ability of [ability of amulet] is now removed.";
+	now the ability of the amulet is insight;
+	now the time left of the amulet is the ability timeout;
+
+Report activating insight:
+	say "Your intuition heightens.";
+
+[amulet strength ability]
+Activating strength is an action applying to nothing. Understand "use amulet for strength" or "use the amulet for strength" as Activating strength.
+
+Check activating strength:
+	if the level of amulet is less than 3:
+		say "Your amulet does not have the stone for that ability.";
+		stop the action;
+	if the ability of the amulet is strength:
+		say "That ability is already activated.";
+		stop the action;
+
+Carry out activating strength:
+	if the ability of the amulet is not none:
+		say "Your ability of [ability of amulet] is now removed.";
+	now the ability of the amulet is strength;
+	now the time left of the amulet is the ability timeout;
+
+Report activating strength:
+	say "You feel strength coursing through your body.";
+
+[amulet healing ability]
+Activating healing is an action applying to nothing. Understand "use amulet for healing" or "use the amulet for healing" as Activating healing.
+
+Check activating healing:
+	if the level of amulet is less than 4:
+		say "Your amulet does not have the stone for that ability.";
+		stop the action;
+	if the ability of the amulet is healing:
+		say "That ability is already activated.";
+		stop the action;
+
+Carry out activating healing:
+	if the ability of the amulet is not none:
+		say "Your ability of [ability of amulet] is now removed.";
+	now the ability of the amulet is healing;
+	now the time left of the amulet is the ability timeout;
+
+Report activating healing:
+	say "You are enveloped by a healing aura.";
+
+[amulet ability decay]
+Every turn when the time left of the amulet is greater than 0:
+	decrease the time left of the amulet by 1;
+	if the time left of the amulet is the ability warning:
+		say "You feel your [ability of the amulet] fading.";
+	if the time left of the amulet is 0:
+		say "Your [ability of the amulet] has worn off.";
+		now the ability of the amulet is none;
 
 Instead of taking the amulet:
 	now the player carries the Amulet;
-	say "The amulet feels solid and reassuring in your palms. 'What is this?'";
+	say "The amulet is seamless, like crafted from magic, it feels solid and reassuring in your palms. 'What is this?'";
 	say "Rain leans in, 'The Amulet of Power. It will help us defeat Burnspring, you need to find the four missing stones, and return in time to save us all, Ivy.'";
 	say "You feel dread, but reassured by the magical token. 'How do I find these stones?'";
 	say "'Go find the Riddler on the Hill, the amulet will guide you from there.', he sighs.";
 
 Chapter I - Our story begins
 
-When play begins, say "It is the Rising Epoch of Spells. A time of great discovery and powerful magic. But something terribly bad is about to happen."
+When play begins:
+	say "It is the Rising Epoch of Spells. A time of great discovery and powerful magic. But something terribly bad is about to happen.";
 
 Your Home is a room. "A cosy place."
 The player is in Your Home.

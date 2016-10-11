@@ -1,134 +1,682 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Skein rootNode="node-0">
-  <generator>Windows Inform 7 6M62</generator>
-  <activeNode nodeId="node-144"/>
-  <item nodeId="node-0">
+<Skein rootNode="node-0x1f607a0" xmlns="http://www.logicalshift.org.uk/IF/Skein">
+  <generator>Inform 7</generator>
+  <activeNode nodeId="node-0x7f97f88062f0"/>
+  <item nodeId="node-0x1f607a0">
     <command xml:space="preserve">- start -</command>
-    <result xml:space="preserve">It is the Rising Epoch of Spells. A time of great discovery and powerful magic. But something terribly bad is about to happen.&#x000A;&#x000A;Jewel Craft, Ivy Veil and the Amulet of Power&#x000A;An Interactive Fiction by Wesley Werner&#x000A;Release 1 / Serial number 161011 / Inform 7 build 6M62 (I6/v6.33 lib 6/12N) SD&#x000A;&#x000A;Your friend Rain Arcana bursts through your door: "Ivy! We need your help!"&#x000A;"What is going on, Rain?"&#x000A;"Burnspring the Sorcerous trapped the magician's guild in a powerful spell, the city is powerless against him!" he pants.&#x000A;"My help? I make jewelry, how in the name of Anerat can I help?", you feel uneasy.&#x000A;Rain steadies himself, "Our magicians are trapped, to be sure, and I fear I will be taken soon."&#x000A;Rain holds out an amulet for you to take.&#x000A;&#x000A;Your Home&#x000A;A cosy place.&#x000A;&#x000A;You can see an Amulet and a wooden door here.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">
+
+
+
+It is the Rising Epoch of Spells. A time of great discovery and powerful magic. But something terribly bad is about to happen.
+
+Jewel Craft, Ivy Veil and the Amulet of Power
+An Interactive Fiction by Wesley Werner
+Release 1 / Serial number 161011 / Inform 7 build 6M62 (I6/v6.33 lib 6/12N) SD
+
+Your friend Rain Arcana bursts through your door: &quot;Ivy! We need your help!&quot;
+&quot;What is going on, Rain?&quot;
+&quot;Burnspring the Sorcerous trapped the magician&apos;s guild in a powerful spell, the city is powerless against him!&quot; he pants.
+&quot;My help? I make jewelry, how in the name of Anerat can I help?&quot;, you feel uneasy.
+Rain steadies himself, &quot;Our magicians are trapped, to be sure, and I fear I will be taken soon.&quot;
+Rain holds out an amulet for you to take.
+
+Your Home
+A cosy place.
+
+You can see an Amulet and a wooden door here.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
     <played>YES</played>
     <changed>NO</changed>
     <temporary score="0">NO</temporary>
+    <annotation xml:space="preserve"></annotation>
     <children>
-      <child nodeId="node-134"/>
+      <child nodeId="node-0x1f60920"/>
+      <child nodeId="node-0x1fb2a70"/>
     </children>
   </item>
-  <item nodeId="node-134">
+  <item nodeId="node-0x1f60920">
     <command xml:space="preserve">go out</command>
-    <result xml:space="preserve">(first opening the wooden door)&#x000A;Best you take the amulet with you.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">(first opening the wooden door)
+Best you take the amulet with you.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
-    <played>YES</played>
+    <played>NO</played>
     <changed>NO</changed>
     <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
     <children>
-      <child nodeId="node-135"/>
+      <child nodeId="node-0x1f60aa0"/>
     </children>
   </item>
-  <item nodeId="node-135">
+  <item nodeId="node-0x1f60aa0">
     <command xml:space="preserve">go out</command>
-    <result xml:space="preserve">(first opening the wooden door)&#x000A;Best you take the amulet with you.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">(first opening the wooden door)
+Best you take the amulet with you.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
-    <played>YES</played>
+    <played>NO</played>
     <changed>NO</changed>
     <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
     <children>
-      <child nodeId="node-136"/>
+      <child nodeId="node-0x1f60c20"/>
     </children>
   </item>
-  <item nodeId="node-136">
+  <item nodeId="node-0x1f60c20">
     <command xml:space="preserve">look</command>
-    <result xml:space="preserve">Your Home&#x000A;A cosy place.&#x000A;&#x000A;You can see an Amulet and a wooden door here.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">Your Home
+A cosy place.
+
+You can see an Amulet and a wooden door here.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
-    <played>YES</played>
+    <played>NO</played>
     <changed>NO</changed>
     <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
     <children>
-      <child nodeId="node-137"/>
+      <child nodeId="node-0x1f60da0"/>
     </children>
   </item>
-  <item nodeId="node-137">
+  <item nodeId="node-0x1f60da0">
     <command xml:space="preserve">take amulet</command>
-    <result xml:space="preserve">The amulet feels solid and reassuring in your palms. "What is this?"&#x000A;Rain leans in, "The Amulet of Power. It will help us defeat Burnspring, you need to find the four missing stones, and return in time to save us all, Ivy."&#x000A;You feel dread, but reassured by the magical token. "How do I find these stones?"&#x000A;"Go find the Riddler on the Hill, the amulet will guide you from there.", he sighs.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">The amulet feels solid and reassuring in your palms. &quot;What is this?&quot;
+Rain leans in, &quot;The Amulet of Power. It will help us defeat Burnspring, you need to find the four missing stones, and return in time to save us all, Ivy.&quot;
+You feel dread, but reassured by the magical token. &quot;How do I find these stones?&quot;
+&quot;Go find the Riddler on the Hill, the amulet will guide you from there.&quot;, he sighs.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
-    <played>YES</played>
+    <played>NO</played>
     <changed>NO</changed>
     <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
     <children>
-      <child nodeId="node-138"/>
+      <child nodeId="node-0x1f60f20"/>
     </children>
   </item>
-  <item nodeId="node-138">
+  <item nodeId="node-0x1f60f20">
     <command xml:space="preserve">go out</command>
-    <result xml:space="preserve">(first opening the wooden door)&#x000A;&#x000A;Hill Path&#x000A;There is shrubbery and trees around you. You can hear water flowing, but cannot see much through the dense foliage. Town is due south, you have no need to go back there right now.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">(first opening the wooden door)
+
+Hill Path
+There is shrubbery and trees around you. You can hear water flowing, but cannot see much through the dense foliage. Town is due south, you have no need to go back there right now.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
-    <played>YES</played>
+    <played>NO</played>
     <changed>YES</changed>
     <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
     <children>
-      <child nodeId="node-139"/>
+      <child nodeId="node-0x1fb2170"/>
     </children>
   </item>
-  <item nodeId="node-139">
+  <item nodeId="node-0x1fb2170">
     <command xml:space="preserve">x door</command>
-    <result xml:space="preserve">You can't see any such thing.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">You can&apos;t see any such thing.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
-    <played>YES</played>
+    <played>NO</played>
     <changed>YES</changed>
     <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
     <children>
-      <child nodeId="node-140"/>
+      <child nodeId="node-0x1fb22f0"/>
     </children>
   </item>
-  <item nodeId="node-140">
+  <item nodeId="node-0x1fb22f0">
     <command xml:space="preserve">look</command>
-    <result xml:space="preserve">Hill Path&#x000A;Town is due south, you have no need to go back there right now.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">Hill Path
+Town is due south, you have no need to go back there right now.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
-    <played>YES</played>
+    <played>NO</played>
     <changed>YES</changed>
     <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
     <children>
-      <child nodeId="node-141"/>
+      <child nodeId="node-0x1fb2470"/>
     </children>
   </item>
-  <item nodeId="node-141">
+  <item nodeId="node-0x1fb2470">
     <command xml:space="preserve">go in\</command>
-    <result xml:space="preserve">You can't see any such thing.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">You can&apos;t see any such thing.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
-    <played>YES</played>
+    <played>NO</played>
     <changed>NO</changed>
     <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
     <children>
-      <child nodeId="node-142"/>
+      <child nodeId="node-0x1fb25f0"/>
     </children>
   </item>
-  <item nodeId="node-142">
+  <item nodeId="node-0x1fb25f0">
     <command xml:space="preserve">go in</command>
-    <result xml:space="preserve">You can't go that way.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">You can&apos;t go that way.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
-    <played>YES</played>
+    <played>NO</played>
     <changed>NO</changed>
     <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
     <children>
-      <child nodeId="node-143"/>
+      <child nodeId="node-0x1fb2770"/>
     </children>
   </item>
-  <item nodeId="node-143">
+  <item nodeId="node-0x1fb2770">
     <command xml:space="preserve">go out</command>
-    <result xml:space="preserve">You can't go that way.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">You can&apos;t go that way.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
-    <played>YES</played>
+    <played>NO</played>
     <changed>YES</changed>
     <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
     <children>
-      <child nodeId="node-144"/>
+      <child nodeId="node-0x1fb28f0"/>
     </children>
   </item>
-  <item nodeId="node-144">
+  <item nodeId="node-0x1fb28f0">
     <command xml:space="preserve">s</command>
-    <result xml:space="preserve">You can't go that way.&#x000A;&#x000A;&gt;</result>
+    <result xml:space="preserve">You can&apos;t go that way.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+  </item>
+  <item nodeId="node-0x1fb2a70">
+    <command xml:space="preserve">take amulet</command>
+    <result xml:space="preserve">The amulet is seamless, like crafted from magic, it feels solid and reassuring in your palms. &quot;What is this?&quot;
+Rain leans in, &quot;The Amulet of Power. It will help us defeat Burnspring, you need to find the four missing stones, and return in time to save us all, Ivy.&quot;
+You feel dread, but reassured by the magical token. &quot;How do I find these stones?&quot;
+&quot;Go find the Riddler on the Hill, the amulet will guide you from there.&quot;, he sighs.
+
+&gt;</result>
     <commentary xml:space="preserve"></commentary>
     <played>YES</played>
     <changed>NO</changed>
     <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x1fb2bf0"/>
+      <child nodeId="node-0x7f98043947b0"/>
+      <child nodeId="node-0x7f97f850f710"/>
+      <child nodeId="node-0x7f97f88065f0"/>
+    </children>
+  </item>
+  <item nodeId="node-0x1fb2bf0">
+    <command xml:space="preserve">use amulet</command>
+    <result xml:space="preserve">I didn&apos;t understand that sentence.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x20bca40"/>
+    </children>
+  </item>
+  <item nodeId="node-0x20bca40">
+    <command xml:space="preserve">use amulet for protection</command>
+    <result xml:space="preserve">You feel protected from evil curses.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x20bcec0"/>
+    </children>
+  </item>
+  <item nodeId="node-0x20bcec0">
+    <command xml:space="preserve">x amulet</command>
+    <result xml:space="preserve">Your amulet has an Amethyst for Protection, an Emerald for Insight, Obsidian for Strength and Amber for Healing. You can use amulet.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x20bcbc0"/>
+    </children>
+  </item>
+  <item nodeId="node-0x20bcbc0">
+    <command xml:space="preserve">use amulet</command>
+    <result xml:space="preserve">I didn&apos;t understand that sentence.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x20bcd40"/>
+    </children>
+  </item>
+  <item nodeId="node-0x20bcd40">
+    <command xml:space="preserve">use amulet for protection</command>
+    <result xml:space="preserve">You feel protected from evil curses.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f98043941b0"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f98043941b0">
+    <command xml:space="preserve">x protection</command>
+    <result xml:space="preserve">You can&apos;t see any such thing.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f9804394630"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f9804394630">
+    <command xml:space="preserve">showme amulet</command>
+    <result xml:space="preserve">Amulet - thing
+location: carried by yourself in Your Home
+singular-named, improper-named; unlit, inedible, portable, handled
+list grouping key: none
+printed name: &quot;Amulet&quot;
+printed plural name: none
+indefinite article: none
+description: &quot;Your amulet has an Amethyst for Protection, an Emerald for Insight, Obsidian for Strength and Amber for Healing. You can use amulet.&quot;
+initial appearance: none
+level: 4
+time left: 20
+ability: protection
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>YES</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+  </item>
+  <item nodeId="node-0x7f98043947b0">
+    <command xml:space="preserve">showme amulet</command>
+    <result xml:space="preserve">Amulet - thing
+location: carried by yourself in Your Home
+singular-named, improper-named; unlit, inedible, portable, handled
+list grouping key: none
+printed name: &quot;Amulet&quot;
+printed plural name: none
+indefinite article: none
+description: &quot;Your amulet has an Amethyst for Protection, an Emerald for Insight, Obsidian for Strength and Amber for Healing. You can use amulet.&quot;
+initial appearance: none
+level: 4
+time left: 0
+ability: none
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f9804394330"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f9804394330">
+    <command xml:space="preserve">use amulet for protection</command>
+    <result xml:space="preserve">You feel protected from evil curses.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f98043944b0"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f98043944b0">
+    <command xml:space="preserve">showme amulet</command>
+    <result xml:space="preserve">Amulet - thing
+location: carried by yourself in Your Home
+singular-named, improper-named; unlit, inedible, portable, handled
+list grouping key: none
+printed name: &quot;Amulet&quot;
+printed plural name: none
+indefinite article: none
+description: &quot;Your amulet has an Amethyst for Protection, an Emerald for Insight, Obsidian for Strength and Amber for Healing. You can use amulet.&quot;
+initial appearance: none
+level: 4
+time left: 6
+ability: protection
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f9804394930"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f9804394930">
+    <command xml:space="preserve">wait</command>
+    <result xml:space="preserve">Time passes.
+
+You feel your protection fading.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f9804394ab0"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f9804394ab0">
+    <command xml:space="preserve">showme amulet</command>
+    <result xml:space="preserve">Amulet - thing
+location: carried by yourself in Your Home
+singular-named, improper-named; unlit, inedible, portable, handled
+list grouping key: none
+printed name: &quot;Amulet&quot;
+printed plural name: none
+indefinite article: none
+description: &quot;Your amulet has an Amethyst for Protection, an Emerald for Insight, Obsidian for Strength and Amber for Healing. You can use amulet.&quot;
+initial appearance: none
+level: 4
+time left: 5
+ability: protection
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f9804394f30"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f9804394f30">
+    <command xml:space="preserve">wait</command>
+    <result xml:space="preserve">Time passes.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f9804394db0"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f9804394db0">
+    <command xml:space="preserve">wait</command>
+    <result xml:space="preserve">Time passes.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f9804394c30"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f9804394c30">
+    <command xml:space="preserve">wait</command>
+    <result xml:space="preserve">Time passes.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f850f110"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f850f110">
+    <command xml:space="preserve">wait</command>
+    <result xml:space="preserve">Time passes.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f850f290"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f850f290">
+    <command xml:space="preserve">wait</command>
+    <result xml:space="preserve">Time passes.
+
+Your protection has worn off.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+  </item>
+  <item nodeId="node-0x7f97f850f710">
+    <command xml:space="preserve">use amulet for protection</command>
+    <result xml:space="preserve">You feel protected from evil curses.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f850f590"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f850f590">
+    <command xml:space="preserve">use amulet for insight</command>
+    <result xml:space="preserve">Your ability of protection is now removed.
+
+Your intuition heightens.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f850f410"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f850f410">
+    <command xml:space="preserve">use amulet for protection</command>
+    <result xml:space="preserve">Your ability of insight is now removed.
+
+You feel protected from evil curses.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f850f890"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f850f890">
+    <command xml:space="preserve">use amulet for insight</command>
+    <result xml:space="preserve">Your ability of protection is now removed.
+
+Your intuition heightens.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f850fd10"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f850fd10">
+    <command xml:space="preserve">use amulet for strength</command>
+    <result xml:space="preserve">Your ability of insight is now removed.
+
+You feel strength coursing through your body.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f850fe90"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f850fe90">
+    <command xml:space="preserve">use amulet for healing</command>
+    <result xml:space="preserve">Your ability of strength is now removed.
+
+You are enveloped by a healing aura.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f850fb90"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f850fb90">
+    <command xml:space="preserve">x amulet</command>
+    <result xml:space="preserve">You have the Amethyst stone, the Emerald stone, the Obsidian stone and the Amber stone.
+You can use the amulet for Protection, Insight, Strength or Healing.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f850fa10"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f850fa10">
+    <command xml:space="preserve">use the amulet for insight</command>
+    <result xml:space="preserve">Your ability of healing is now removed.
+
+Your intuition heightens.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f8806170"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f8806170">
+    <command xml:space="preserve">use the amulet for protection</command>
+    <result xml:space="preserve">Your ability of insight is now removed.
+
+You feel protected from evil curses.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>NO</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+  </item>
+  <item nodeId="node-0x7f97f88065f0">
+    <command xml:space="preserve">x amulet</command>
+    <result xml:space="preserve">There are four empty slots to hold four stones.
+
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f8806770"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f8806770">
+    <command xml:space="preserve">give stone</command>
+    <result xml:space="preserve">You can&apos;t see any such thing.
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
+    <children>
+      <child nodeId="node-0x7f97f88062f0"/>
+    </children>
+  </item>
+  <item nodeId="node-0x7f97f88062f0">
+    <command xml:space="preserve">x amulet</command>
+    <result xml:space="preserve">There are four empty slots to hold four stones.
+
+
+&gt;</result>
+    <commentary xml:space="preserve"></commentary>
+    <played>YES</played>
+    <changed>NO</changed>
+    <temporary score="0">YES</temporary>
+    <annotation xml:space="preserve"></annotation>
   </item>
 </Skein>
