@@ -115,22 +115,48 @@ Every turn when the time left of the amulet is greater than 0:
 
 Instead of taking the amulet:
 	now the player carries the Amulet;
-	say "The amulet is seamless, like crafted from magic, it feels solid and reassuring in your palms. 'What is this?'";
-	say "Rain leans in, 'The Amulet of Power. It will help us defeat Burnspring, you need to find the four missing stones, and return in time to save us all, Ivy.'";
+	say "The amulet is seamless, like crafted from magic, it feels solid and reassuring in your palms.";
+	say "'What is this?', you ask.";
+	say "Rain leans in, 'The Amulet of Power. It will help us defeat Burnspring. You need to find the four missing stones, and return in time to save us all, Ivy.'";
 	say "You feel dread, but reassured by the magical token. 'How do I find these stones?'";
 	say "'Go find the Riddler on the Hill, the amulet will guide you from there.', he sighs.";
+
+Section 3 - Default Interactions
+
+Understand "talk to [someone]" as a mistake ("To start a conversation, try to ASK [the noun] ABOUT something or TELL [the noun] ABOUT something."). 
 
 Chapter I - Our story begins
 
 When play begins:
 	say "It is the Rising Epoch of Spells. A time of great discovery and powerful magic. But something terribly bad is about to happen.";
 
-Your Home is a room. "A cosy place."
-The player is in Your Home.
-The Amulet is in Your Home.
+Your Home is a room. "You live in a cozy place. Here is a hearth, a table and the door leading out." The player is in Your Home. The Amulet is in Your Home.
+
+A man called Rain Arcana is in your home. The description is "This man puts you in mind of a mysterious raven. He has hooded eyes the color of chestnuts. His fine, straight, black hair is worn in a style that reminds you of the aurora borealis. He has an angular build. His skin is dark. He has a high forehead. His wardrobe is strange, with a lot of green and violet."
+
+Instead of asking Rain Arcana about "amulet/stone/stones":
+	say "The Amethyst stone gives protection, you will resist evil curses. The Emerald stone gives insight, you will know which path to walk. The Obsidian stone gives strength, and makes your skin hard like steel. The Amber stone gives healing, protecting you from injury.";
+
+Instead of asking Rain Arcana about "burnspring":
+	say "Burnspring was a magician of the times, very unconventional and perhaps a little too dark for the rest of us. He set off to find a mystic and dark power. No doubt he did, and now is using it for great evil."
+
+Instead of asking Rain Arcana about "burnspring/magician/guild":
+	say "All the powerful magicians are trapped in a magical web, unable to resist Burnspring's rule."
+
+Instead of giving the amulet to Rain Arcana for the first time:
+	say "I cannot take the amulet back, Ivy. When Burnspring finds me, and undoubtedly he will, all hope will be lost if he gets hold of the Amulet of Power."
+
+Instead of giving the amulet to Rain Arcana:
+	say "You decide Rain is right, we cannot risk losing the amulet in the hands of Burnspring."
 The hearth is scenery in Your Home. The description is "The dying embers are covered in ash."
 The table is scenery in Your Home.  The description is "An old sturdy wooden table where you work on your jewels. There are various tools and items on the table, none of them are needed right now."
 
+Instead of asking Rain Arcana about "us" for the first time:
+	say "Ivy, I hope you return. You know how much last night meant...";
+
+Instead of asking Rain Arcana about "us":
+	say "He looks too embarrassed to ask again."
+[your home]
 Carry out looking in Home for the first time:
 	say "Your friend Rain Arcana bursts through your door: 'Ivy! We need your help!'";
 	say "'What is going on, Rain?'";
@@ -148,7 +174,7 @@ We can also use [if the player is in the Hill Path for the first time] but this 
 ]
 The Hill Path is a room. "[if the Hill Path is unvisited]There is shrubbery and trees around you. You can hear water flowing, but cannot see much through the dense foliage. [end if]Town is due south, you have no need to go back there right now."
 
-A wooden door is a door. The description is "A sturdy wooden door that leads outside." It is outside from Your Home. Through it is the Hill Path. [a one-sided door only leading out]
+A wooden door is a door. It is scenery. The description is "A sturdy wooden door that leads outside." It is outside from Your Home. Through it is the Hill Path. [a one-sided door only leading out]
 Instead of opening a wooden door when the player is not carrying the Amulet:
 	say "Best you take the amulet with you."
 	
