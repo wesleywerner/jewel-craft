@@ -2,7 +2,7 @@
 
 Section 1 - Testing Helpers - Not for release
 
-Adding a stone is an action out of world. 
+Adding a stone is an action out of world. Understand "give a stone" as adding a stone.
 Carry out adding a stone:
 	if the level of the amulet is less than 3:
 		Increase the level of the amulet by 1;
@@ -16,6 +16,9 @@ Ability is a kind of value. The abilities are none, protection, insight, strengt
 The amulet has an ability. The ability of the amulet is none.
 The amulet has a number called level. The amulet has level 0.
 The amulet has a number called time left. The time left of the amulet is 0.
+
+[assist the player]
+Understand "use amulet" as a mistake ("You can use amulet for protection/insight/strength/healing").
 
 [constants used by the amulet abilities]
 The ability timeout is always 20.
