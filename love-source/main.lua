@@ -26,7 +26,7 @@
 local utf8 = require("utf8")
 
 --local moon = require("moonlight")
-local font
+local large_font
 local interface, textbox, layout, output = {}, {}, {}, {}
 
 -- constants
@@ -82,8 +82,8 @@ function love.load ()
     -- load font resource
     local size = 18
     local hinting = "mono"
-    font = love.graphics.newFont("FreeMono.ttf", size, hinting)
-    love.graphics.setFont(font)
+    large_font = love.graphics.newFont("FreeMono.ttf", size, hinting)
+    love.graphics.setFont(large_font)
 
     layout:load()
     interface:load()
@@ -138,6 +138,9 @@ end
 -- Interface
 
 function interface.load (self)
+    self.lg_fnt_w = large_font:getWidth("=")
+    self.lg_fnt_h = large_font:getHeight("=")
+    -- TODO small font sizes
     -- load positions of the various layout areas
     self.input = layout:calculate("input")
     self.output = layout:calculate("output")
@@ -152,12 +155,6 @@ function interface.draw (self)
     love.graphics.translate(self.input.x, self.input.y)
     love.graphics.setColor(self.input_bg)
     love.graphics.rectangle("fill", 0, 0, self.input.width, self.input.height)
-    -- offset the input down
-    love.graphics.translate(0, 10)
-    -- print input chevron
-    love.graphics.setColor(1, 1, 0)
-    love.graphics.print(">")
-    love.graphics.translate(20, 0)
     textbox:draw(1, 1, 0) -- r,g,b
     love.graphics.pop()
 
@@ -166,6 +163,7 @@ function interface.draw (self)
     love.graphics.translate(self.output.x, self.output.y)
     love.graphics.setColor(self.output_bg)
     love.graphics.rectangle("fill", 0, 0, self.output.width, self.output.height)
+
     -- render output text
     love.graphics.setColor(1, 1, 0)
     output:draw()
@@ -182,11 +180,28 @@ function interface.keypressed (self, key)
 end
 
 function interface.process_input (self, text)
+
+    -- bye bye
     if string.match(text, "^quit") or string.match(text, "^bye") then
         love.event.quit()
         return
     end
-    output:append_text("> "..text)
+
+    -- FIXME adding testing output
+    local canned_responses = {
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Vestibulum tempor elit sit amet tortor vestibulum, in rhoncus sem aliquam.",
+    "Sed mattis urna nec nibh mollis semper.",
+    "Nunc et leo sit amet tellus efficitur tristique feugiat at lectus.",
+    "Donec ac orci hendrerit, mollis eros vel, venenatis ex.",
+    "Praesent non nisl dapibus, rutrum est quis, pellentesque nunc.",
+    "Nunc id risus varius enim cursus semper ut nec nulla.",
+    "Quisque vel neque cursus, molestie urna et, egestas neque.",
+    "Proin semper velit vel enim porta ullamcorper.",
+    "Curabitur eu arcu sed lectus tincidunt egestas."
+    }
+    local test_response = canned_responses[math.random(1, #canned_responses)]
+    output:append_text("> "..text.."\n"..test_response)
 end
 
 --  _____ _____ _____ _____ _____ _____ _____ _____ _____ _____
@@ -236,7 +251,6 @@ function layout.calculate (self, name)
     local scr_width, scr_height = love.graphics.getDimensions()
     for _, panel in ipairs(self.data) do
         if panel.name == name then
-            -- TODO named properties
             local dimensions = {
                 ["x"]=panel.x * scr_width,
                 ["y"]=panel.y * scr_height,
@@ -270,9 +284,6 @@ function textbox.load (self)
     -- provides auto complete
     self.auto_words = { "open", "close", "go", "take", "read", "mailbox", "leaflet" }
     self.auto_match = nil
-    -- measure the width of a character
-    self.box_width = font:getWidth("=")
-    self.box_height = font:getHeight("=")
     -- calculate cursor position now
     self:move(0, 0)
 end
@@ -311,21 +322,31 @@ function textbox.delete_character (self, advance_cursor)
 end
 
 function textbox.draw (self, r, g, b)
+
+    -- print input chevron at an offset
+    love.graphics.translate(0, 14)
+    love.graphics.setColor(r, g, b, 1)
+    love.graphics.print(">")
+    -- shift next print statement across the chevron
+    love.graphics.translate(20, 0)
+
     -- print auto suggestion
     if self.auto_match then
         love.graphics.setColor(r, g, b, .3)
         love.graphics.print(self.auto_match, self.auto_word_position)
     end
+
     -- print the buffer
     love.graphics.setColor(r, g, b, 1)
     love.graphics.print(self.buffer)
+
     -- render the cursor
     if self.blink_on then
         love.graphics.setColor(r, g, b, .5)
-        love.graphics.rectangle("fill", self.cursor_x, self.cursor_y, self.box_width, self.box_height)
+        love.graphics.rectangle("fill", self.cursor_x, self.cursor_y, interface.lg_fnt_w, interface.lg_fnt_h)
     else
         love.graphics.setColor(r, g, b, .2)
-        love.graphics.rectangle("fill", self.cursor_x, self.cursor_y, self.box_width, self.box_height)
+        love.graphics.rectangle("fill", self.cursor_x, self.cursor_y, interface.lg_fnt_w, interface.lg_fnt_h)
     end
 end
 
@@ -444,7 +465,7 @@ function textbox.match_auto_com (self)
         buffer = string.reverse(buffer)
         -- store word size and position for future use
         self.auto_word_size = utf8.len(buffer)
-        self.auto_word_position = (utf8.len(self.buffer)-self.auto_word_size-1)*self.box_width
+        self.auto_word_position = (utf8.len(self.buffer)-self.auto_word_size-1)*interface.lg_fnt_w
         -- scan for matches
         for _, query in ipairs(self.auto_words) do
             -- include match anchor
@@ -474,7 +495,7 @@ function textbox.move (self, column_delta)
     self.cursor_column = math.min(max_column, math.max(1, cc + column_delta))
 
     -- subtract to zero-based coordinates
-    self.cursor_x = (self.cursor_column-1) * self.box_width
+    self.cursor_x = (self.cursor_column-1) * interface.lg_fnt_w
 
 end
 
@@ -588,34 +609,26 @@ end
 -- |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
 
 function output.append_text (self, text)
-    -- wrap words before this many columns
-    local max_seg_len = 50
-    -- insert newlines to wrap text inside the screen
-    local last_known_space = 0
-    local segment_len = 0
-    for pos = 1, utf8.len(text) do
-        local pos_offset = utf8.offset(text, pos)
-        local the_char = string.sub(text, pos_offset, pos_offset)
-        segment_len = segment_len + 1
-        if the_char == " " then
-            last_known_space = pos
-        end
-        if last_known_space > 0 and segment_len > max_seg_len then
-            -- reset segment count
-            segment_len = 0
-            -- insert newline
-            text = string.sub(text, 1, last_known_space-1) .. "\n" .. string.sub(text, last_known_space, -1)
-            pos = last_known_space
-            print("segmenting text at "..pos.." to "..text)
+
+    local all_lines = output:split_line(text)
+    for _, this_line in ipairs(all_lines) do
+        local wrapped_lines = output:wrap_line(this_line, self.COLUMN_WRAP)
+        for _, that_line in ipairs(wrapped_lines) do
+            table.insert(self.buffer, that_line)
         end
     end
-    -- add output text and trim the buffer to size
-    table.insert(self.buffer, text)
-    while #self.buffer > self.size do
+
+    -- always space out entries
+    table.insert(self.buffer, "")
+
+    -- cull the buffer
+    while #self.buffer > self.MAX_HISTORY do
         table.remove(self.buffer, 1)
     end
-    -- invalidate the drawable
-    self.text_object = nil
+
+    -- scroll back to the latest message
+    self.scroll_offset = 0
+
 end
 
 function output.append_image (self, todo)
@@ -624,18 +637,28 @@ end
 
 function output.draw (self)
 
+    -- draw scroll-back indicators
+    if self.scroll_offset > 0 then
+        love.graphics.printf("^", 0, interface.output.height, interface.output.width, "center")
+    else
+        love.graphics.printf("^", 0, 0, interface.output.width, "center")
+    end
+
+    -- print padding
+    love.graphics.translate(5, 20)
+
     -- start printing DISPLAY_NUMBER from the end
     local start = #self.buffer - self.DISPLAY_NUMBER - self.scroll_offset
     local end_pos = start + self.DISPLAY_NUMBER
 
-    -- clamp
+    -- clamp start to range
     start = math.max(1, start)
     start = math.min(start, #self.buffer)
 
     for pos = start, end_pos do
         local entry = self.buffer[pos]
         if entry then
-            love.graphics.print(entry, 0, (pos-start)*self.font_height)
+            love.graphics.print(entry, 0, (pos-start)*interface.lg_fnt_h)
         end
     end
 
@@ -661,64 +684,16 @@ end
 
 function output.load (self)
     -- maximum entries saved at any given time
-    self.size = 120
+    self.MAX_HISTORY = 120
     -- number of lines drawn per page
-    self.DISPLAY_NUMBER = 24
-    -- measure font line height
-    self.font_height = font:getHeight("=")
+    self.DISPLAY_NUMBER = 23
+    -- column wrap limit calculated as characters that can fit
+    -- ... minus some leeway
+    self.COLUMN_WRAP = math.floor(interface.output.width / interface.lg_fnt_w) - 10
     -- output scroll-back offset
     self.scroll_offset = 0
     -- content buffer
-    self.buffer = {
-        "1> look",
-        "Proin eget leo interdum, facilisis ante at, fermentum nisl.",
-        "",
-        "2> open mailbox",
-        "Donec elementum justo id neque ultricies euismod.",
-        "",
-        "3> take leaflet",
-        "In lobortis metus eu sem tempor iaculis.",
-        "",
-        "4> read it",
-        "Praesent vel est nec dolor convallis porta sed ultrices magna.",
-        "",
-        "5> look",
-        "Proin eget leo interdum, facilisis ante at, fermentum nisl.",
-        "",
-        "6> open mailbox",
-        "Donec elementum justo id neque ultricies euismod.",
-        "",
-        "7> take leaflet",
-        "In lobortis metus eu sem tempor iaculis.",
-        "",
-        "8> read it",
-        "Praesent vel est nec dolor convallis porta sed ultrices magna.",
-        "",
-        "9> look",
-        "Proin eget leo interdum, facilisis ante at, fermentum nisl.",
-        "",
-        "12> open mailbox",
-        "Donec elementum justo id neque ultricies euismod.",
-        "",
-        "13> take leaflet",
-        "In lobortis metus eu sem tempor iaculis.",
-        "",
-        "14> read it",
-        "Praesent vel est nec dolor convallis porta sed ultrices magna.",
-        "",
-        "15> look",
-        "Proin eget leo interdum, facilisis ante at, fermentum nisl.",
-        "",
-        "16> open mailbox",
-        "Donec elementum justo id neque ultricies euismod.",
-        "",
-        "17> take leaflet",
-        "In lobortis metus eu sem tempor iaculis.",
-        "",
-        "18> read it",
-        "Praesent vel est nec dolor convallis porta sed ultrices magna.",
-        "",
-    }
+    self.buffer = { }
 end
 
 function output.scroll_history (self, direction)
@@ -731,7 +706,48 @@ function output.scroll_history (self, direction)
     --print("output offset "..self.scroll_offset.." buff size "..#self.buffer)
 end
 
+function output.split_line(self, text)
+    -- given a line: split it into a table at newlines.
+    local t = { }
+    local function helper(line)
+        table.insert(t, line)
+        return ""
+    end
+    helper((text:gsub("(.-)\r?\n", helper)))
+    return t
+end
+
 function output.update (self, dt)
 
+end
+
+function output.wrap_line(self, text, limit)
+    -- given a line: split it into a table at column limit.
+    -- limit not exceeded:
+    if utf8.len(text) < limit then
+        return { text }
+    end
+    -- wrap text lines:
+    local t = { }
+    while true do
+        -- scan for next space
+        local p1, p2 = string.find(text, "%s", limit)
+        if p1 and p2 then
+            -- split the line at p
+            local first_part = string.sub(text, 1, p1-1)
+            table.insert(t, first_part)
+            -- take the second part
+            text = string.sub(text, p1, -1)
+            -- remove leading space
+            if string.match(text, "^%s") then
+                text = string.sub(text, 2, -1)
+            end
+        else
+            -- no match takes the full line
+            table.insert(t, text)
+            break
+        end
+    end
+    return t
 end
 
