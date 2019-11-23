@@ -163,10 +163,8 @@ function interface.draw (self)
     love.graphics.translate(self.output.x, self.output.y)
     love.graphics.setColor(self.output_bg)
     love.graphics.rectangle("fill", 0, 0, self.output.width, self.output.height)
-
     -- render output text
-    love.graphics.setColor(1, 1, 0)
-    output:draw()
+    output:draw(1, 1, 0) -- r, g, b
     love.graphics.pop()
 
 end
@@ -632,19 +630,22 @@ function output.append_text (self, text)
 end
 
 function output.append_image (self, todo)
+    -- TODO image output
+    -- do mix images into the buffer.
+    -- instead track only the most recent image (set on examine).
     assert(false, "for future me to implement")
 end
 
-function output.draw (self)
+function output.draw (self, r, g, b)
 
     -- draw scroll-back indicators
     if self.scroll_offset > 0 then
-        love.graphics.printf("^", 0, interface.output.height, interface.output.width, "center")
-    else
-        love.graphics.printf("^", 0, 0, interface.output.width, "center")
+        love.graphics.setColor(r, g, b, .4)
+        love.graphics.printf("(more)", 0, interface.output.height-interface.lg_fnt_h, interface.output.width, "right")
     end
 
-    -- print padding
+    -- print padding and color
+    love.graphics.setColor(r, g, b, 1)
     love.graphics.translate(5, 20)
 
     -- start printing DISPLAY_NUMBER from the end
