@@ -26,8 +26,7 @@
 local utf8 = require("utf8")
 
 --local moon = require("moonlight")
-local large_font
-local interface, textbox, layout, output = {}, {}, {}, {}
+local interface, textbox, layout, output, compass = {}, {}, {}, {}, {}
 
 -- constants
 local UP = -1
@@ -35,145 +34,122 @@ local DOWN = 1
 local LEFT = -1
 local RIGHT = 1
 
--- Table of Layout Ratios
-local layout_ = {
-	{
-		height = 0.186666666666666703,
-		name = "map",
-		width = 0.160000000000000031,
-		x = 0.819999999999999951,
-		y = 0.239999999999999991,
-	},
-	{
-		height = 0.186666666666666731,
-		name = "amulet",
-		width = 0.160000000000000031,
-		x = 0.819999999999999951,
-		y = 0.026666666666666668,
-	},
-	{
-		height = 0.07999999999999996,
-		name = "input",
-		width = 0.780000000000000027,
-		x = 0.020000000000000018,
-		y = 0.906666666666666732,
-	},
-	{
-		height = 0.533333333333333437,
-		name = "inventory",
-		width = 0.160000000000000031,
-		x = 0.819999999999999951,
-		y = 0.45333333333333331,
-	},
-	{
-		height = 0.853333333333333499,
-		name = "output",
-		width = 0.780000000000000027,
-		x = 0.020000000000000018,
-		y = 0.026666666666666616,
-	},
-}
-
 --  _____ _____ _____ _____ _____ _____ _____ _____ _____ _____
 -- |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
+-- Compass
 
-function love.load ()
-
-    -- load font resource
-    local size = 18
-    local hinting = "mono"
-    large_font = love.graphics.newFont("FreeMono.ttf", size, hinting)
-    love.graphics.setFont(large_font)
-
-    layout:load()
-    interface:load()
-    textbox:load()
-    output:load()
-
+function compass.draw (self)
+    if self.focused then
+        love.graphics.setColor(1, 1, 1, 1)
+    else
+        love.graphics.setColor(1, 1, 1, .6)
+    end
+    love.graphics.draw(self.image)
 end
 
-function love.draw ()
-    interface:draw()
-    love.graphics.setColor(1,1,1)
-    --love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
-end
+function compass.keypressed (self, key)
 
-function love.update (dt)
-
-    local fpslimit = 1/7
-    if dt < fpslimit then
-        love.timer.sleep(fpslimit - dt)
+    if not self.focused then
+        return
     end
 
-    textbox:update(dt)
-    output:update(dt)
-end
-
-function love.keypressed (key, scancode, isrepeat)
-    textbox:keypressed(key, scancode, isrepeat)
-    output:keypressed(key, scancode, isrepeat)
-    if key == "f10" then
-        love.event.quit()
+    if key == "kp8" or key == "up" then
+        interface:process_input("go north")
+    elseif key == "kp2" or key == "down" then
+        interface:process_input("go south")
+    elseif key == "kp4" or key == "left" then
+        interface:process_input("go west")
+    elseif key == "kp6" or key == "right" then
+        interface:process_input("go east")
+    elseif key == "kp7" or key == "home" then
+        interface:process_input("go northwest")
+    elseif key == "kp9" or key == "pageup" then
+        interface:process_input("go northeast")
+    elseif key == "kp1" or key == "end" then
+        interface:process_input("go southwest")
+    elseif key == "kp3" or key == "pagedown" then
+        interface:process_input("go southeast")
     end
-end
-
-function love.mousemoved (x, y, dx, dy, istouch)
 
 end
 
-function love.mousepressed (x, y, button, istouch, presses)
-
+function compass.load (self)
+    -- focus control
+    self.focused = false
+    self.image = love.graphics.newImage("res/compass_128.png")
 end
 
-function love.mousereleased (x, y, button, istouch, presses)
+function compass.update (self, dt)
 
-end
-
-function love.textinput (text)
-    textbox:textinput(text)
 end
 
 --  _____ _____ _____ _____ _____ _____ _____ _____ _____ _____
 -- |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
 -- Interface
 
-function interface.load (self)
-    self.lg_fnt_w = large_font:getWidth("=")
-    self.lg_fnt_h = large_font:getHeight("=")
-    -- TODO small font sizes
-    -- load positions of the various layout areas
-    self.input = layout:calculate("input")
-    self.output = layout:calculate("output")
-    self.input_bg = {0, 0, .6}
-    self.output_bg = {0, 0, .6}
-end
-
 function interface.draw (self)
 
-    -- draw input area
+    -- Use the large font
+    love.graphics.setFont(self.lg_font)
+
+    -- Draw input area:
     love.graphics.push()
-    love.graphics.translate(self.input.x, self.input.y)
+    love.graphics.translate(layout._.input.x, layout._.input.y)
     love.graphics.setColor(self.input_bg)
-    love.graphics.rectangle("fill", 0, 0, self.input.width, self.input.height)
+    love.graphics.rectangle("fill", 0, 0, layout._.input.width, layout._.input.height)
     textbox:draw(1, 1, 0) -- r,g,b
     love.graphics.pop()
 
-    -- draw output area
+    -- Draw output area:
     love.graphics.push()
-    love.graphics.translate(self.output.x, self.output.y)
+    love.graphics.translate(layout._.output.x, layout._.output.y)
     love.graphics.setColor(self.output_bg)
-    love.graphics.rectangle("fill", 0, 0, self.output.width, self.output.height)
-    -- render output text
+    love.graphics.rectangle("fill", 0, 0, layout._.output.width, layout._.output.height)
     output:draw(1, 1, 0) -- r, g, b
+    love.graphics.pop()
+
+    -- Use the small font
+    love.graphics.setFont(self.sm_font)
+
+    -- Draw the compass
+    love.graphics.push()
+    love.graphics.translate(layout._.compass.x, layout._.compass.y)
+    love.graphics.setColor(self.output_bg)
+    love.graphics.rectangle("fill", 0, 0, layout._.compass.width, layout._.compass.height)
+    compass:draw()
     love.graphics.pop()
 
 end
 
-function interface.update (self, dt)
+function interface.keypressed (self, key, scancode, isrepeat)
+
+    -- switch tab focus
+    if key == "tab" then
+        compass.focused = not compass.focused
+        textbox.focused = not compass.focused
+    end
+
+    compass:keypressed(key, scancode, isrepeat)
+    textbox:keypressed(key, scancode, isrepeat)
+    output:keypressed(key, scancode, isrepeat)
 
 end
 
-function interface.keypressed (self, key)
+function interface.load (self)
+
+    -- load font resources
+    local hinting = "mono"
+    self.lg_font = love.graphics.newFont("FreeMono.ttf", 18, hinting)
+    self.sm_font = love.graphics.newFont("FreeMono.ttf", 10, hinting)
+
+    -- measure font sizes
+    self.lg_font_w = self.lg_font:getWidth("=")
+    self.lg_font_h = self.lg_font:getHeight("=")
+    self.sm_font_w = self.sm_font:getWidth("=")
+    self.sm_font_h = self.sm_font:getHeight("=")
+
+    self.input_bg = {0, 0, .6}
+    self.output_bg = {0, 0, .6}
 
 end
 
@@ -202,24 +178,40 @@ function interface.process_input (self, text)
     output:append_text("> "..text.."\n"..test_response)
 end
 
+function interface.update (self, dt)
+
+end
+
 --  _____ _____ _____ _____ _____ _____ _____ _____ _____ _____
 -- |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
 
+function layout.calculate (self, panel)
+    local scr_width, scr_height = love.graphics.getDimensions()
+    local dimensions = {
+        ["x"]=panel.x * scr_width,
+        ["y"]=panel.y * scr_height,
+        ["width"]=panel.width * scr_width,
+        ["height"]=panel.height * scr_height}
+    return dimensions
+end
+
 function layout.load (self)
-    self.data = {
+
+    -- layout ratios generated by freditor
+    self.ratio_table = {
         {
-            height = 0.186666666666666703,
-            name = "map",
-            width = 0.160000000000000031,
-            x = 0.819999999999999951,
-            y = 0.239999999999999991,
-        },
-        {
-            height = 0.186666666666666731,
+            height = 0.213333333333333403,
             name = "amulet",
             width = 0.160000000000000031,
             x = 0.819999999999999951,
             y = 0.026666666666666668,
+        },
+        {
+            height = 0.213333333333333375,
+            name = "compass",
+            width = 0.160000000000000031,
+            x = 0.819999999999999951,
+            y = 0.266666666666666663,
         },
         {
             height = 0.07999999999999996,
@@ -229,11 +221,11 @@ function layout.load (self)
             y = 0.906666666666666732,
         },
         {
-            height = 0.533333333333333437,
+            height = 0.480000000000000149,
             name = "inventory",
             width = 0.160000000000000031,
             x = 0.819999999999999951,
-            y = 0.45333333333333331,
+            y = 0.506666666666666599,
         },
         {
             height = 0.853333333333333499,
@@ -243,48 +235,212 @@ function layout.load (self)
             y = 0.026666666666666616,
         },
     }
-end
 
-function layout.calculate (self, name)
-    local scr_width, scr_height = love.graphics.getDimensions()
-    for _, panel in ipairs(self.data) do
-        if panel.name == name then
-            local dimensions = {
-                ["x"]=panel.x * scr_width,
-                ["y"]=panel.y * scr_height,
-                ["width"]=panel.width * scr_width,
-                ["height"]=panel.height * scr_height}
-            return dimensions
-        end
+    -- precalculate all ratios into meta table
+    self._ = { }
+    for _, ratio in ipairs(self.ratio_table) do
+        local result = self:calculate(ratio)
+        self._[ratio.name] = result
+        --print(ratio.name, result.width, result.height)
     end
-    assert(false, ("no layout named %q" % name))
+
 end
 
 --  _____ _____ _____ _____ _____ _____ _____ _____ _____ _____
 -- |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
+-- LOVE
 
-function textbox.load (self)
-    -- controls cursor position and limit
-    self.max_column = 80
-    self.cursor_column = 1
-    self.cursor_row = 1
-    self.cursor_x = 0
-    self.cursor_y = 0
-    -- controls cursor blinking
-    self.blink_delay = 0.75
-    self.blink_dt = 0
-    self.blink_on = true
-    -- the buffer contains the user input
-    self.buffer = " "
-    -- track historical inputs
-    self.history = { "look", "open mailbox", "take leaflet" }
-    self.history_index = nil
-    -- provides auto complete
-    self.auto_words = { "open", "close", "go", "take", "read", "mailbox", "leaflet" }
-    self.auto_match = nil
-    -- calculate cursor position now
-    self:move(0, 0)
+function love.draw ()
+    interface:draw()
+    --love.graphics.setColor(1,1,1)
+    --love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
 end
+
+function love.load ()
+
+    layout:load()
+    interface:load()
+    textbox:load()
+    output:load()
+    compass:load()
+
+end
+
+function love.keypressed (key, scancode, isrepeat)
+    interface:keypressed(key, scancode, isrepeat)
+    if key == "f10" then
+        love.event.quit()
+    end
+end
+
+function love.textinput (text)
+    textbox:textinput(text)
+end
+
+function love.update (dt)
+
+    local fpslimit = 1/7
+    if dt < fpslimit then
+        love.timer.sleep(fpslimit - dt)
+    end
+
+    textbox:update(dt)
+    output:update(dt)
+end
+
+--  _____ _____ _____ _____ _____ _____ _____ _____ _____ _____
+-- |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
+-- Output display
+
+function output.append_image (self, todo)
+    -- TODO image output
+    -- do mix images into the buffer.
+    -- instead track only the most recent image (set on examine).
+    assert(false, "for future me to implement")
+end
+
+function output.append_text (self, text)
+
+    local all_lines = output:split_line(text)
+    for _, this_line in ipairs(all_lines) do
+        local wrapped_lines = output:wrap_line(this_line, self.COLUMN_WRAP)
+        for _, that_line in ipairs(wrapped_lines) do
+            table.insert(self.buffer, that_line)
+        end
+    end
+
+    -- always space out entries
+    table.insert(self.buffer, "")
+
+    -- cull the buffer
+    while #self.buffer > self.MAX_HISTORY do
+        table.remove(self.buffer, 1)
+    end
+
+    -- scroll back to the latest message
+    self.scroll_offset = 0
+
+end
+
+function output.draw (self, r, g, b)
+
+    -- draw scroll-back indicators
+    if self.scroll_offset > 0 then
+        love.graphics.setColor(r, g, b, .4)
+        love.graphics.printf("(more)", 0, layout._.output.height-interface.lg_font_h, layout._.output.width, "right")
+    end
+
+    -- print padding and color
+    love.graphics.setColor(r, g, b, 1)
+    love.graphics.translate(5, 20)
+
+    -- start printing DISPLAY_NUMBER from the end
+    local start = #self.buffer - self.DISPLAY_NUMBER - self.scroll_offset
+    local end_pos = start + self.DISPLAY_NUMBER
+
+    -- clamp start to range
+    start = math.max(1, start)
+    start = math.min(start, #self.buffer)
+
+    for pos = start, end_pos do
+        local entry = self.buffer[pos]
+        if entry then
+            love.graphics.print(entry, 0, (pos-start)*interface.lg_font_h)
+        end
+    end
+
+end
+
+function output.keypressed (self, key, scancode, isrepeat)
+
+    local control_down = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
+    local alt_down = love.keyboard.isDown("lalt") or love.keyboard.isDown("ralt")
+
+    -- alt function keys
+    if true or control_down then
+        if key == "pageup" then
+            -- scroll to older history
+            self:scroll_history(DOWN)
+        elseif key == "pagedown" then
+            -- scroll to recent history
+            self:scroll_history(UP)
+        end
+    end
+
+end
+
+function output.load (self)
+    -- maximum entries saved at any given time
+    self.MAX_HISTORY = 120
+    -- number of lines drawn per page
+    self.DISPLAY_NUMBER = 23
+    -- column wrap limit calculated as characters that can fit
+    -- ... minus some leeway
+    self.COLUMN_WRAP = math.floor(layout._.output.width / interface.lg_font_w) - 10
+    -- output scroll-back offset
+    self.scroll_offset = 0
+    -- content buffer
+    self.buffer = { }
+end
+
+function output.scroll_history (self, direction)
+    local lines_to_scroll = 8
+    local n = self.scroll_offset + (direction*lines_to_scroll)
+    -- clamp to buffer boundaries
+    n = math.max(0, n)
+    n = math.min(#self.buffer-self.DISPLAY_NUMBER-1, n)
+    self.scroll_offset = n
+    --print("output offset "..self.scroll_offset.." buff size "..#self.buffer)
+end
+
+function output.split_line(self, text)
+    -- given a line: split it into a table at newlines.
+    local t = { }
+    local function helper(line)
+        table.insert(t, line)
+        return ""
+    end
+    helper((text:gsub("(.-)\r?\n", helper)))
+    return t
+end
+
+function output.update (self, dt)
+
+end
+
+function output.wrap_line(self, text, limit)
+    -- given a line: split it into a table at column limit.
+    -- limit not exceeded:
+    if utf8.len(text) < limit then
+        return { text }
+    end
+    -- wrap text lines:
+    local t = { }
+    while true do
+        -- scan for next space
+        local p1, p2 = string.find(text, "%s", limit)
+        if p1 and p2 then
+            -- split the line at p
+            local first_part = string.sub(text, 1, p1-1)
+            table.insert(t, first_part)
+            -- take the second part
+            text = string.sub(text, p1, -1)
+            -- remove leading space
+            if string.match(text, "^%s") then
+                text = string.sub(text, 2, -1)
+            end
+        else
+            -- no match takes the full line
+            table.insert(t, text)
+            break
+        end
+    end
+    return t
+end
+
+--  _____ _____ _____ _____ _____ _____ _____ _____ _____ _____
+-- |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
+-- Text Input
 
 function textbox.delete_character (self, advance_cursor)
     -- measure the line
@@ -339,12 +495,14 @@ function textbox.draw (self, r, g, b)
     love.graphics.print(self.buffer)
 
     -- render the cursor
-    if self.blink_on then
-        love.graphics.setColor(r, g, b, .5)
-        love.graphics.rectangle("fill", self.cursor_x, self.cursor_y, interface.lg_fnt_w, interface.lg_fnt_h)
-    else
-        love.graphics.setColor(r, g, b, .2)
-        love.graphics.rectangle("fill", self.cursor_x, self.cursor_y, interface.lg_fnt_w, interface.lg_fnt_h)
+    if self.focused then
+        if self.blink_on then
+            love.graphics.setColor(r, g, b, .5)
+            love.graphics.rectangle("fill", self.cursor_x, self.cursor_y, interface.lg_font_w, interface.lg_font_h)
+        else
+            love.graphics.setColor(r, g, b, .2)
+            love.graphics.rectangle("fill", self.cursor_x, self.cursor_y, interface.lg_font_w, interface.lg_font_h)
+        end
     end
 end
 
@@ -388,8 +546,11 @@ end
 
 function textbox.keypressed (self, key, scancode, isrepeat)
 
+    if not self.focused then
+        return
+    end
+
     local control_down = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
-    --local shift_down = love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift")
     local alt_down = love.keyboard.isDown("lalt") or love.keyboard.isDown("ralt")
 
     -- control function keys
@@ -447,6 +608,31 @@ function textbox.keypressed (self, key, scancode, isrepeat)
 
 end
 
+function textbox.load (self)
+    -- focus control
+    self.focused = true
+    -- cursor position and limit
+    self.max_column = 80
+    self.cursor_column = 1
+    self.cursor_row = 1
+    self.cursor_x = 0
+    self.cursor_y = 0
+    -- controls cursor blinking
+    self.blink_delay = 0.75
+    self.blink_dt = 0
+    self.blink_on = true
+    -- the buffer contains the user input
+    self.buffer = " "
+    -- track historical inputs
+    self.history = { "look", "open mailbox", "take leaflet" }
+    self.history_index = nil
+    -- provides auto complete
+    self.auto_words = { "open", "close", "go", "take", "read", "mailbox", "leaflet" }
+    self.auto_match = nil
+    -- calculate cursor position now
+    self:move(0, 0)
+end
+
 function textbox.match_auto_com (self)
     -- negate previous match
     self.auto_match = nil
@@ -463,7 +649,7 @@ function textbox.match_auto_com (self)
         buffer = string.reverse(buffer)
         -- store word size and position for future use
         self.auto_word_size = utf8.len(buffer)
-        self.auto_word_position = (utf8.len(self.buffer)-self.auto_word_size-1)*interface.lg_fnt_w
+        self.auto_word_position = (utf8.len(self.buffer)-self.auto_word_size-1)*interface.lg_font_w
         -- scan for matches
         for _, query in ipairs(self.auto_words) do
             -- include match anchor
@@ -493,7 +679,7 @@ function textbox.move (self, column_delta)
     self.cursor_column = math.min(max_column, math.max(1, cc + column_delta))
 
     -- subtract to zero-based coordinates
-    self.cursor_x = (self.cursor_column-1) * interface.lg_fnt_w
+    self.cursor_x = (self.cursor_column-1) * interface.lg_font_w
 
 end
 
@@ -557,6 +743,10 @@ end
 
 function textbox.textinput (self, text)
 
+    if not self.focused then
+        return
+    end
+
     -- space applies auto complete
     local perform_autocomplete = text == " " and self.auto_match
     -- accept space or alpha-numeric
@@ -583,9 +773,11 @@ function textbox.textinput (self, text)
             self.cursor_column = self.cursor_column + utf8.len(text)
         end
     end
+
     -- calculate cursor position
     self:move(0, 0)
     self:match_auto_com()
+
     -- hide auto match when line ends with space
     if string.match(self.buffer, "%s%s$") then
         self.auto_match = nil
@@ -601,154 +793,3 @@ function textbox.update (self, dt)
         self.blink_dt = 0
     end
 end
-
-
---  _____ _____ _____ _____ _____ _____ _____ _____ _____ _____
--- |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
-
-function output.append_text (self, text)
-
-    local all_lines = output:split_line(text)
-    for _, this_line in ipairs(all_lines) do
-        local wrapped_lines = output:wrap_line(this_line, self.COLUMN_WRAP)
-        for _, that_line in ipairs(wrapped_lines) do
-            table.insert(self.buffer, that_line)
-        end
-    end
-
-    -- always space out entries
-    table.insert(self.buffer, "")
-
-    -- cull the buffer
-    while #self.buffer > self.MAX_HISTORY do
-        table.remove(self.buffer, 1)
-    end
-
-    -- scroll back to the latest message
-    self.scroll_offset = 0
-
-end
-
-function output.append_image (self, todo)
-    -- TODO image output
-    -- do mix images into the buffer.
-    -- instead track only the most recent image (set on examine).
-    assert(false, "for future me to implement")
-end
-
-function output.draw (self, r, g, b)
-
-    -- draw scroll-back indicators
-    if self.scroll_offset > 0 then
-        love.graphics.setColor(r, g, b, .4)
-        love.graphics.printf("(more)", 0, interface.output.height-interface.lg_fnt_h, interface.output.width, "right")
-    end
-
-    -- print padding and color
-    love.graphics.setColor(r, g, b, 1)
-    love.graphics.translate(5, 20)
-
-    -- start printing DISPLAY_NUMBER from the end
-    local start = #self.buffer - self.DISPLAY_NUMBER - self.scroll_offset
-    local end_pos = start + self.DISPLAY_NUMBER
-
-    -- clamp start to range
-    start = math.max(1, start)
-    start = math.min(start, #self.buffer)
-
-    for pos = start, end_pos do
-        local entry = self.buffer[pos]
-        if entry then
-            love.graphics.print(entry, 0, (pos-start)*interface.lg_fnt_h)
-        end
-    end
-
-end
-
-function output.keypressed (self, key, scancode, isrepeat)
-
-    local control_down = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")
-    local alt_down = love.keyboard.isDown("lalt") or love.keyboard.isDown("ralt")
-
-    -- alt function keys
-    if true or control_down then
-        if key == "pageup" then
-            -- scroll to older history
-            self:scroll_history(DOWN)
-        elseif key == "pagedown" then
-            -- scroll to recent history
-            self:scroll_history(UP)
-        end
-    end
-
-end
-
-function output.load (self)
-    -- maximum entries saved at any given time
-    self.MAX_HISTORY = 120
-    -- number of lines drawn per page
-    self.DISPLAY_NUMBER = 23
-    -- column wrap limit calculated as characters that can fit
-    -- ... minus some leeway
-    self.COLUMN_WRAP = math.floor(interface.output.width / interface.lg_fnt_w) - 10
-    -- output scroll-back offset
-    self.scroll_offset = 0
-    -- content buffer
-    self.buffer = { }
-end
-
-function output.scroll_history (self, direction)
-    local lines_to_scroll = 8
-    local n = self.scroll_offset + (direction*lines_to_scroll)
-    -- clamp to buffer boundaries
-    n = math.max(0, n)
-    n = math.min(#self.buffer-self.DISPLAY_NUMBER-1, n)
-    self.scroll_offset = n
-    --print("output offset "..self.scroll_offset.." buff size "..#self.buffer)
-end
-
-function output.split_line(self, text)
-    -- given a line: split it into a table at newlines.
-    local t = { }
-    local function helper(line)
-        table.insert(t, line)
-        return ""
-    end
-    helper((text:gsub("(.-)\r?\n", helper)))
-    return t
-end
-
-function output.update (self, dt)
-
-end
-
-function output.wrap_line(self, text, limit)
-    -- given a line: split it into a table at column limit.
-    -- limit not exceeded:
-    if utf8.len(text) < limit then
-        return { text }
-    end
-    -- wrap text lines:
-    local t = { }
-    while true do
-        -- scan for next space
-        local p1, p2 = string.find(text, "%s", limit)
-        if p1 and p2 then
-            -- split the line at p
-            local first_part = string.sub(text, 1, p1-1)
-            table.insert(t, first_part)
-            -- take the second part
-            text = string.sub(text, p1, -1)
-            -- remove leading space
-            if string.match(text, "^%s") then
-                text = string.sub(text, 2, -1)
-            end
-        else
-            -- no match takes the full line
-            table.insert(t, text)
-            break
-        end
-    end
-    return t
-end
-
