@@ -149,9 +149,9 @@ function interface.draw (self)
 
     -- draw input area
     love.graphics.push()
-    love.graphics.translate(self.input[1], self.input[2])
+    love.graphics.translate(self.input.x, self.input.y)
     love.graphics.setColor(self.input_bg)
-    love.graphics.rectangle("fill", 0, 0, self.input[3], self.input[4])
+    love.graphics.rectangle("fill", 0, 0, self.input.width, self.input.height)
     -- offset the input down
     love.graphics.translate(0, 10)
     -- print input chevron
@@ -163,9 +163,9 @@ function interface.draw (self)
 
     -- draw output area
     love.graphics.push()
-    love.graphics.translate(self.output[1], self.output[2])
+    love.graphics.translate(self.output.x, self.output.y)
     love.graphics.setColor(self.output_bg)
-    love.graphics.rectangle("fill", 0, 0, self.output[3], self.output[4])
+    love.graphics.rectangle("fill", 0, 0, self.output.width, self.output.height)
     -- render output text
     love.graphics.setColor(1, 1, 0)
     output:draw()
@@ -193,7 +193,6 @@ end
 -- |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
 
 function layout.load (self)
-    self.precalc = {}
     self.data = {
         {
             height = 0.186666666666666703,
@@ -234,45 +233,47 @@ function layout.load (self)
 end
 
 function layout.calculate (self, name)
-    -- return previously calculated dimensions
-    if self.precalc[name] then
-        return self.precalc[name]
-    else
-        local scr_width, scr_height = love.graphics.getDimensions()
-        for _, panel in ipairs(self.data) do
-            if panel.name == name then
-                local dimensions = {
-                    panel.x * scr_width,
-                    panel.y * scr_height,
-                    panel.width * scr_width,
-                    panel.height * scr_height}
-                self.precalc[name] = dimensions
-                return dimensions
-            end
+    local scr_width, scr_height = love.graphics.getDimensions()
+    for _, panel in ipairs(self.data) do
+        if panel.name == name then
+            -- TODO named properties
+            local dimensions = {
+                ["x"]=panel.x * scr_width,
+                ["y"]=panel.y * scr_height,
+                ["width"]=panel.width * scr_width,
+                ["height"]=panel.height * scr_height}
+            return dimensions
         end
-        assert(false, ("no layout named %q" % name))
     end
+    assert(false, ("no layout named %q" % name))
 end
 
 --  _____ _____ _____ _____ _____ _____ _____ _____ _____ _____
 -- |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
 
 function textbox.load (self)
-    -- init variables
+    -- controls cursor position and limit
     self.max_column = 80
     self.cursor_column = 1
     self.cursor_row = 1
     self.cursor_x = 0
     self.cursor_y = 0
+    -- controls cursor blinking
+    self.blink_delay = 0.75
     self.blink_dt = 0
     self.blink_on = true
+    -- the buffer contains the user input
     self.buffer = " "
+    -- track historical inputs
     self.history = { "look", "open mailbox", "take leaflet" }
     self.history_index = nil
+    -- provides auto complete
+    self.auto_words = { "open", "close", "go", "take", "read", "mailbox", "leaflet" }
+    self.auto_match = nil
     -- measure the width of a character
     self.box_width = font:getWidth("=")
     self.box_height = font:getHeight("=")
-    -- calculate cursor position
+    -- calculate cursor position now
     self:move(0, 0)
 end
 
@@ -310,14 +311,20 @@ function textbox.delete_character (self, advance_cursor)
 end
 
 function textbox.draw (self, r, g, b)
+    -- print auto suggestion
+    if self.auto_match then
+        love.graphics.setColor(r, g, b, .3)
+        love.graphics.print(self.auto_match, self.auto_word_position)
+    end
     -- print the buffer
+    love.graphics.setColor(r, g, b, 1)
     love.graphics.print(self.buffer)
     -- render the cursor
     if self.blink_on then
-        love.graphics.setColor(r, g, b, .7)
+        love.graphics.setColor(r, g, b, .5)
         love.graphics.rectangle("fill", self.cursor_x, self.cursor_y, self.box_width, self.box_height)
     else
-        love.graphics.setColor(r, g, b, .4)
+        love.graphics.setColor(r, g, b, .2)
         love.graphics.rectangle("fill", self.cursor_x, self.cursor_y, self.box_width, self.box_height)
     end
 end
@@ -400,21 +407,58 @@ function textbox.keypressed (self, key, scancode, isrepeat)
         elseif key == "backspace" then
             -- erase character before cursor
             self:delete_character(true)
+            self:match_auto_com()
         elseif key == "delete" then
             -- erase character after cursor
             self:delete_character(false)
+            self:match_auto_com()
         elseif key == "escape" then
             -- clear input
             self.buffer = " "
             self:reset_history_position()
+            self:match_auto_com()
         elseif key == "return" then
             self:record_history(self.buffer)
             interface:process_input(self.buffer)
             self.buffer = " "
             self:move(0, 0)
+            self:match_auto_com()
         end
     end
 
+end
+
+function textbox.match_auto_com (self)
+    -- negate previous match
+    self.auto_match = nil
+    -- load the input buffer minus the ending space
+    local buffer = string.sub(self.buffer, 1, -2)
+    -- extract the last word by reversing the buffer ...
+    buffer =  string.reverse(buffer)
+    -- and matching on space or EOL ...
+    local p1, p2 = string.find(buffer, "%w+")
+    if p1 and p2 then
+        -- and cutting that part out ...
+        buffer = string.sub(buffer, p1, p2)
+        -- and restoring the order
+        buffer = string.reverse(buffer)
+        -- store word size and position for future use
+        self.auto_word_size = utf8.len(buffer)
+        self.auto_word_position = (utf8.len(self.buffer)-self.auto_word_size-1)*self.box_width
+        -- scan for matches
+        for _, query in ipairs(self.auto_words) do
+            -- include match anchor
+            local match = string.match(query, "^"..buffer)
+            --print("match ^"..buffer.." in "..query.." "..(match and "*" or ""))
+            if match and (buffer ~= query) then
+                self.auto_match = query
+                break
+            else
+                -- an exact match means word completed
+                self.auto_match = nil
+            end
+        end
+    end
 end
 
 function textbox.move (self, column_delta)
@@ -488,11 +532,28 @@ function textbox.scan_history (self, direction)
     end
     -- position cursor EOL
     self:move(self.max_column, 0)
+    -- perform auto complete match
+    self:match_auto_com()
 end
 
 function textbox.textinput (self, text)
-    local buffer_line = self.buffer
-    if text then
+
+    -- space applies auto complete
+    local perform_autocomplete = text == " " and self.auto_match
+    -- accept space or alpha-numeric
+    local valid_input = text == " " or string.match(text, "%w+")
+
+    if perform_autocomplete then
+        -- cut the partial
+        local buff = string.sub(self.buffer, 1, -self.auto_word_size-2)
+        -- add auto complete
+        buff = buff..self.auto_match.."  "
+        self.buffer = buff
+        --self.auto_match = nil
+        self:move(self.max_column, 0)
+    elseif valid_input then
+        -- manipulate the input buffer
+        local buffer_line = self.buffer
         local cursor_offset = utf8.offset(buffer_line, self.cursor_column)
         if cursor_offset then
             -- insert input line into buffer line
@@ -505,11 +566,18 @@ function textbox.textinput (self, text)
     end
     -- calculate cursor position
     self:move(0, 0)
+    self:match_auto_com()
+    -- hide auto match when line ends with space
+    if string.match(self.buffer, "%s%s$") then
+        self.auto_match = nil
+    end
+
 end
 
 function textbox.update (self, dt)
+    -- flip cursor blink state
     self.blink_dt = self.blink_dt + dt
-    if self.blink_dt > 1 then
+    if self.blink_dt > self.blink_delay then
         self.blink_on = not self.blink_on
         self.blink_dt = 0
     end
